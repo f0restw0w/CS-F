@@ -1,0 +1,22 @@
+# Godot 4 .gitignore
+
+# Godot 自动生成的导入缓存
+.godot/
+.import/
+export.cfg
+export_presets.cfg
+
+# 导出产物
+*.exe
+*.pck
+*.zip
+build/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器
+*.swp
+.vscode/
+.idea/
