@@ -1,0 +1,98 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Material" path="res://resources/materials/mat_floor.tres" id="m_floor"]
+[ext_resource type="Material" path="res://resources/materials/mat_wall.tres" id="m_wall"]
+[ext_resource type="Material" path="res://resources/materials/mat_crate.tres" id="m_crate"]
+
+[node name="LongA" type="Node3D"]
+editor_description = "长A：入口通道(x 384..950, z 1000..1200)经 Long Doors(双 64 门洞, x=660) 接主直道(x 950..1206, z -580..1200, 长 1780 宽 256)——air strafe/连跳最佳测试场。北端西侧 Pit(x 820..950, z -580..-350, 地面 -96)，内置 48 高逃生箱。"
+
+[node name="Passage_Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 667, -8, 1100)
+use_collision = true
+size = Vector3(566, 16, 200)
+material = ExtResource("m_floor")
+
+[node name="Passage_Wall_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 667, 96, 1000)
+use_collision = true
+size = Vector3(566, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Wall_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 795, 96, 1200)
+use_collision = true
+size = Vector3(822, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="LongDoors_Post_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 660, 96, 1012)
+use_collision = true
+size = Vector3(16, 192, 24)
+material = ExtResource("m_wall")
+
+[node name="LongDoors_Post_Center" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 660, 96, 1100)
+use_collision = true
+size = Vector3(16, 192, 24)
+material = ExtResource("m_wall")
+
+[node name="LongDoors_Post_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 660, 96, 1188)
+use_collision = true
+size = Vector3(16, 192, 24)
+material = ExtResource("m_wall")
+
+[node name="Corridor_Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1078, -8, 310)
+use_collision = true
+size = Vector3(256, 16, 1780)
+material = ExtResource("m_floor")
+
+[node name="Wall_E" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1206, 96, 310)
+use_collision = true
+size = Vector3(16, 192, 1780)
+material = ExtResource("m_wall")
+
+[node name="Wall_W" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 950, 96, 325)
+use_collision = true
+size = Vector3(16, 192, 1350)
+material = ExtResource("m_wall")
+
+[node name="Pit_Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 885, -104, -465)
+use_collision = true
+size = Vector3(130, 16, 230)
+material = ExtResource("m_floor")
+
+[node name="Pit_Wall_W" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 820, 48, -465)
+use_collision = true
+size = Vector3(16, 288, 230)
+material = ExtResource("m_wall")
+
+[node name="Pit_Wall_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 885, 48, -350)
+use_collision = true
+size = Vector3(130, 288, 16)
+material = ExtResource("m_wall")
+
+[node name="Pit_Wall_N_Lower" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 885, -48, -580)
+use_collision = true
+size = Vector3(130, 96, 16)
+material = ExtResource("m_wall")
+
+[node name="Pit_EscapeCrate_48" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 852, -72, -400)
+use_collision = true
+size = Vector3(48, 48, 48)
+material = ExtResource("m_crate")
+
+[node name="JumpTest_长A连跳直道" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1078, 2, 1100)
+
+[node name="JumpTest_Pit逃生_48箱" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 852, -46, -400)
