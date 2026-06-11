@@ -1,0 +1,92 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Material" path="res://resources/materials/mat_floor.tres" id="m_floor"]
+[ext_resource type="Material" path="res://resources/materials/mat_wall.tres" id="m_wall"]
+[ext_resource type="Material" path="res://resources/materials/mat_raised.tres" id="m_raised"]
+
+[node name="BTunnels" type="Node3D"]
+editor_description = "B 隧道：T 出生西口(z 1000..1192)→西向上隧道(x -1100..-384, 地面 0)→北拐(测贴墙削速)→台阶下到 -64 下隧道→北端台阶回 0 接 B 点南口(x -1100..-908)。台阶 16 高 ≤ step 18。通道宽 192。"
+
+[node name="Upper_Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -742, -8, 1096)
+use_collision = true
+size = Vector3(716, 16, 192)
+material = ExtResource("m_floor")
+
+[node name="Upper_Wall_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -742, 96, 1192)
+use_collision = true
+size = Vector3(748, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Upper_Wall_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -646, 96, 1000)
+use_collision = true
+size = Vector3(524, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Corridor_Wall_W" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1100, 48, 306)
+use_collision = true
+size = Vector3(16, 288, 1772)
+material = ExtResource("m_wall")
+
+[node name="Corridor_Wall_E" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -908, 48, 210)
+use_collision = true
+size = Vector3(16, 288, 1580)
+material = ExtResource("m_wall")
+
+[node name="Corridor_Upper_Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1004, -8, 700)
+use_collision = true
+size = Vector3(192, 16, 600)
+material = ExtResource("m_floor")
+
+[node name="StepDown1_top-16" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1004, -48, 384)
+use_collision = true
+size = Vector3(192, 64, 32)
+material = ExtResource("m_raised")
+
+[node name="StepDown2_top-32" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1004, -56, 352)
+use_collision = true
+size = Vector3(192, 48, 32)
+material = ExtResource("m_raised")
+
+[node name="StepDown3_top-48" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1004, -64, 320)
+use_collision = true
+size = Vector3(192, 32, 32)
+material = ExtResource("m_raised")
+
+[node name="Lower_Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1004, -72, -96)
+use_collision = true
+size = Vector3(192, 16, 800)
+material = ExtResource("m_floor")
+
+[node name="StepUp1_top-48" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1004, -64, -510)
+use_collision = true
+size = Vector3(192, 32, 28)
+material = ExtResource("m_raised")
+
+[node name="StepUp2_top-32" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1004, -56, -538)
+use_collision = true
+size = Vector3(192, 48, 28)
+material = ExtResource("m_raised")
+
+[node name="StepUp3_top-16" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1004, -48, -566)
+use_collision = true
+size = Vector3(192, 64, 28)
+material = ExtResource("m_raised")
+
+[node name="ClipTest_拐弯贴墙保速" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1004, 2, 1096)
+
+[node name="StepTest_下隧道台阶" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1004, -40, 352)
