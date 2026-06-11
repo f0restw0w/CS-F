@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Material" path="res://resources/materials/mat_floor.tres" id="m_floor"]
+[ext_resource type="Material" path="res://resources/materials/mat_wall.tres" id="m_wall"]
+
+[node name="Arch" type="Node3D"]
+editor_description = "拱门通道（CT→B）：x -700..-384, z -1196..-1004，宽 192。x=-550 处拱门：洞宽 160 高 128（带门楣），测穿门贴框削速。"
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -542, -8, -1100)
+use_collision = true
+size = Vector3(316, 16, 192)
+material = ExtResource("m_floor")
+
+[node name="Wall_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -542, 96, -1196)
+use_collision = true
+size = Vector3(316, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Wall_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -542, 96, -1004)
+use_collision = true
+size = Vector3(316, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Arch_Post_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -550, 96, -1188)
+use_collision = true
+size = Vector3(16, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Arch_Post_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -550, 96, -1012)
+use_collision = true
+size = Vector3(16, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Arch_Lintel" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -550, 160, -1100)
+use_collision = true
+size = Vector3(16, 64, 160)
+material = ExtResource("m_wall")
+
+[node name="ClipTest_穿拱门贴框" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -550, 2, -1100)
