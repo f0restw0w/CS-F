@@ -1,0 +1,60 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/regions/t_spawn.tscn" id="r_tspawn"]
+[ext_resource type="PackedScene" path="res://scenes/regions/ct_spawn.tscn" id="r_ctspawn"]
+[ext_resource type="PackedScene" path="res://scenes/regions/mid.tscn" id="r_mid"]
+[ext_resource type="PackedScene" path="res://scenes/regions/long_a.tscn" id="r_longa"]
+[ext_resource type="PackedScene" path="res://scenes/regions/short_a.tscn" id="r_shorta"]
+[ext_resource type="PackedScene" path="res://scenes/regions/a_site.tscn" id="r_asite"]
+[ext_resource type="PackedScene" path="res://scenes/regions/b_tunnels.tscn" id="r_btunnels"]
+[ext_resource type="PackedScene" path="res://scenes/regions/b_site.tscn" id="r_bsite"]
+[ext_resource type="PackedScene" path="res://scenes/regions/arch.tscn" id="r_arch"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="p_player"]
+[ext_resource type="Script" path="res://scripts/debug/speed_hud.gd" id="s_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+
+[node name="Dust2" type="Node3D"]
+editor_description = "灰盒 dust2 总装。所有分区场景使用统一世界坐标，全部放在原点。布局为近似起点，待负责人按记忆校准（docs/MAP_DUST2.md 校准流程）。"
+
+[node name="Regions" type="Node3D" parent="."]
+
+[node name="TSpawn" parent="Regions" instance=ExtResource("r_tspawn")]
+
+[node name="CTSpawn" parent="Regions" instance=ExtResource("r_ctspawn")]
+
+[node name="Mid" parent="Regions" instance=ExtResource("r_mid")]
+
+[node name="LongA" parent="Regions" instance=ExtResource("r_longa")]
+
+[node name="ShortA" parent="Regions" instance=ExtResource("r_shorta")]
+
+[node name="ASite" parent="Regions" instance=ExtResource("r_asite")]
+
+[node name="BTunnels" parent="Regions" instance=ExtResource("r_btunnels")]
+
+[node name="BSite" parent="Regions" instance=ExtResource("r_bsite")]
+
+[node name="Arch" parent="Regions" instance=ExtResource("r_arch")]
+
+[node name="Player" parent="." instance=ExtResource("p_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 1300)
+
+[node name="SpeedHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_hud")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 2000, 0)
+shadow_enabled = true
+directional_shadow_max_distance = 4000.0
