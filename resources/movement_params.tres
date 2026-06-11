@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MovementParams" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/movement_params.gd" id="1_params"]
+
+[resource]
+script = ExtResource("1_params")
+max_speed = 320.0
+accelerate = 5.0
+air_accelerate = 10.0
+friction = 4.0
+stop_speed = 75.0
+gravity = 800.0
+jump_height = 45.0
+air_wish_speed_cap = 30.0
+bhop_speed_cap_enabled = false
