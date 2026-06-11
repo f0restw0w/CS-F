@@ -1,0 +1,67 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Material" path="res://resources/materials/mat_floor.tres" id="m_floor"]
+[ext_resource type="Material" path="res://resources/materials/mat_wall.tres" id="m_wall"]
+
+[node name="CTSpawn" type="Node3D"]
+editor_description = "CT 出生点：768x512 平地（x -384..384, z -1300..-788）。南墙留中路口(x -112..112)，东墙留 CT→A 通道口(z -1196..-1004)，西墙留拱门通道口(z -1196..-1004)。"
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8, -1044)
+use_collision = true
+size = Vector3(768, 16, 512)
+material = ExtResource("m_floor")
+
+[node name="Wall_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 96, -1300)
+use_collision = true
+size = Vector3(800, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Wall_S_West" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -256, 96, -788)
+use_collision = true
+size = Vector3(288, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Wall_S_East" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 96, -788)
+use_collision = true
+size = Vector3(288, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Wall_E_North" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 384, 96, -1248)
+use_collision = true
+size = Vector3(16, 192, 104)
+material = ExtResource("m_wall")
+
+[node name="Wall_E_South" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 384, 96, -896)
+use_collision = true
+size = Vector3(16, 192, 216)
+material = ExtResource("m_wall")
+
+[node name="Wall_W_North" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -384, 96, -1248)
+use_collision = true
+size = Vector3(16, 192, 104)
+material = ExtResource("m_wall")
+
+[node name="Wall_W_South" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -384, 96, -896)
+use_collision = true
+size = Vector3(16, 192, 216)
+material = ExtResource("m_wall")
+
+[node name="Spawn_CT1" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1100)
+
+[node name="Spawn_CT2" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120, 2, -1120)
+
+[node name="Spawn_CT3" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120, 2, -1120)
+
+[node name="Spawn_CT4" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1180)
