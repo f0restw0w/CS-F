@@ -33,6 +33,33 @@ class_name MovementParams
 ## 原型阶段默认关闭（经典无限连跳），由负责人试玩后决定——见 MOVEMENT_SPEC.md。
 @export var bhop_speed_cap_enabled: bool = false
 
+@export_group("蹲（duck）")
+
+## PLAYER_DUCKING_MULTIPLIER = 0.333（HL SDK pm_shared.c）：
+## 完全蹲下时 wishspeed 倍率（地面与空中都生效，320 → ~106.6）
+@export var duck_speed_multiplier: float = 0.333
+
+## TIME_TO_DUCK = 0.4s（HL SDK pm_shared.c）：地面蹲下过渡时长。
+## 空中蹲为瞬时完成（GoldSrc 行为，duck-jump 的前提）。
+@export var time_to_duck: float = 0.4
+
+## VEC_HULL（HL SDK）：站立碰撞体高 72
+@export var stand_hull_height: float = 72.0
+
+## VEC_DUCK_HULL（HL SDK）：蹲下碰撞体高 36
+@export var duck_hull_height: float = 36.0
+
+## 站立眼高 64（GoldSrc origin+VEC_VIEW 28，origin 在脚上 36）
+@export var stand_eye_height: float = 64.0
+
+## 蹲下眼高 30（GoldSrc VEC_DUCK_VIEW 12 + 蹲 hull 半高 18）
+@export var duck_eye_height: float = 30.0
+
+@export_group("视角平滑")
+
+## 台阶视角平滑速度（HL V_CalcRefdef 平滑爬升 150 u/s），偏移上限 = step 高 18
+@export var step_smooth_speed: float = 150.0
+
 
 ## 起跳垂直初速：v = sqrt(2 * g * h)（GoldSrc 跳跃高度 ~45 → ~268 单位/秒）
 func jump_velocity() -> float:
