@@ -1,5 +1,6 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=14 format=3]
 
+[ext_resource type="Texture2D" path="res://assets/hdri/syferfontein_1d_clear_2k.hdr" id="t_hdri"]
 [ext_resource type="PackedScene" path="res://scenes/regions/t_spawn.tscn" id="r_tspawn"]
 [ext_resource type="PackedScene" path="res://scenes/regions/ct_spawn.tscn" id="r_ctspawn"]
 [ext_resource type="PackedScene" path="res://scenes/regions/mid.tscn" id="r_mid"]
@@ -10,11 +11,8 @@
 [ext_resource type="PackedScene" path="res://scenes/regions/b_site.tscn" id="r_bsite"]
 [ext_resource type="PackedScene" path="res://scenes/regions/arch.tscn" id="r_arch"]
 
-[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
-sky_top_color = Color(0.38, 0.55, 0.75, 1)
-sky_horizon_color = Color(0.76, 0.78, 0.76, 1)
-ground_bottom_color = Color(0.3, 0.27, 0.22, 1)
-ground_horizon_color = Color(0.76, 0.78, 0.76, 1)
+[sub_resource type="PanoramaSkyMaterial" id="sky_mat"]
+panorama = ExtResource("t_hdri")
 
 [sub_resource type="Sky" id="sky"]
 sky_material = SubResource("sky_mat")
