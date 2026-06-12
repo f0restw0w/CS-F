@@ -4,67 +4,61 @@
 [ext_resource type="Material" path="res://resources/materials/mat_wall.tres" id="m_wall"]
 
 [node name="TSpawn" type="Node3D"]
-editor_description = "T 出生点：高地（地面 y=128，全图标高基准之一）。768x512 平地（x -384..384, z 944..1456）。北口下中路大坡（mid 内），东口下长A入口坡，西口下隧道坡。"
+editor_description = "T 出生点 v2（真实比例重排）：高地 h=160，x[-1100,-200] z[300,1000]（900x700）。北开 T 大坡下中路（x[-560,-260]，无墙开放），东开出生口外/长A方向（z[300,560]），西开隧道口（z[420,680]）。"
 
 [node name="Floor" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 120, 1200)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -650, 152, 650)
 use_collision = true
-size = Vector3(768, 16, 512)
+size = Vector3(900, 16, 700)
 material = ExtResource("m_floor")
 
 [node name="Wall_S" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 224, 1456)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -650, 256, 1000)
 use_collision = true
-size = Vector3(800, 192, 16)
+size = Vector3(932, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Wall_W_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1100, 256, 360)
+use_collision = true
+size = Vector3(16, 192, 120)
+material = ExtResource("m_wall")
+
+[node name="Wall_W_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1100, 256, 840)
+use_collision = true
+size = Vector3(16, 192, 320)
 material = ExtResource("m_wall")
 
 [node name="Wall_N_West" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -272, 224, 944)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -830, 256, 300)
 use_collision = true
-size = Vector3(256, 192, 16)
+size = Vector3(540, 192, 16)
 material = ExtResource("m_wall")
 
 [node name="Wall_N_East" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 272, 224, 944)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -230, 256, 300)
 use_collision = true
-size = Vector3(256, 192, 16)
+size = Vector3(60, 192, 16)
 material = ExtResource("m_wall")
 
-[node name="Wall_E_North" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 384, 224, 972)
+[node name="Wall_E" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -200, 256, 780)
 use_collision = true
-size = Vector3(16, 192, 56)
-material = ExtResource("m_wall")
-
-[node name="Wall_E_South" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 384, 224, 1328)
-use_collision = true
-size = Vector3(16, 192, 256)
-material = ExtResource("m_wall")
-
-[node name="Wall_W_North" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -384, 224, 972)
-use_collision = true
-size = Vector3(16, 192, 56)
-material = ExtResource("m_wall")
-
-[node name="Wall_W_South" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -384, 224, 1324)
-use_collision = true
-size = Vector3(16, 192, 264)
+size = Vector3(16, 192, 440)
 material = ExtResource("m_wall")
 
 [node name="Spawn_T1" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 130, 1300)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -650, 162, 650)
 
 [node name="Spawn_T2" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120, 130, 1320)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -800, 162, 750)
 
 [node name="Spawn_T3" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120, 130, 1320)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -500, 162, 750)
 
 [node name="Spawn_T4" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -240, 130, 1280)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -650, 162, 850)
 
 [node name="Spawn_T5" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 240, 130, 1280)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -950, 162, 600)

@@ -1,6 +1,10 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
 ; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
@@ -60,10 +64,4 @@ reload={
 
 [physics]
 
-; GoldSrc 手感对 tick 敏感：固定 100 tick（见 docs/MOVEMENT_SPEC.md「固定 tick rate」节）
 common/physics_ticks_per_second=100
-
-[rendering]
-
-; 原型期灰盒，无需高级渲染特性
-renderer/rendering_method="forward_plus"

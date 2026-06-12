@@ -4,76 +4,139 @@
 [ext_resource type="Material" path="res://resources/materials/mat_raised.tres" id="m_raised"]
 
 [node name="ShortA" type="Node3D"]
-editor_description = "A 短道/猫道（标高：中路 0 → 台阶 64 → 东腿坡 64→128 → 拐角平台 128 → 北腿坡 128→224 → 跳下 A 点 160，落差 64）。窄道宽 128。台阶 16 ≤ step 18。"
+editor_description = "猫道/A 短道 v2：中路东口(z[-950,-820]) 台阶 0→64 → 猫道缓坡 64→96（x 到 420）→ 拐角 96 → 短道台阶 96→160（北向）→ A 短走廊 160（z 到 -2150）→ 东折顶廊（x 560..950）→ 两级台阶上 A 点 192。窄道宽 130。"
 
 [node name="Step1_h16" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 0, -236)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -244, 0, -885)
 use_collision = true
-size = Vector3(32, 32, 128)
+size = Vector3(32, 32, 130)
 material = ExtResource("m_raised")
 
 [node name="Step2_h32" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 160, 8, -236)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -212, 8, -885)
 use_collision = true
-size = Vector3(32, 48, 128)
+size = Vector3(32, 48, 130)
 material = ExtResource("m_raised")
 
 [node name="Step3_h48" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 192, 16, -236)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -180, 16, -885)
 use_collision = true
-size = Vector3(32, 64, 128)
+size = Vector3(32, 64, 130)
 material = ExtResource("m_raised")
 
 [node name="Step4_h64" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 224, 24, -236)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -148, 24, -885)
 use_collision = true
-size = Vector3(32, 80, 128)
+size = Vector3(32, 80, 130)
 material = ExtResource("m_raised")
 
-[node name="Cat_Ramp_East" type="CSGBox3D" parent="."]
-transform = Transform3D(0.98058, -0.19612, 0, 0.19612, 0.98058, 0, 0, 0, 1, 401.6, 88.2, -236)
+[node name="Cat_Ramp" type="CSGBox3D" parent="."]
+transform = Transform3D(0.99822, -0.05963, 0, 0.05963, 0.99822, 0, 0, 0, 1, 152.5, 72, -885)
 use_collision = true
-size = Vector3(328, 16, 128)
+size = Vector3(538, 16, 130)
 material = ExtResource("m_raised")
 
-[node name="Cat_Corner_h128" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 624, 120, -236)
+[node name="Cat_Corner" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 490, 88, -885)
 use_collision = true
-size = Vector3(128, 16, 128)
+size = Vector3(140, 16, 130)
 material = ExtResource("m_raised")
 
-[node name="Cat_Ramp_North" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.94593, -0.32444, 0, 0.32444, 0.94593, 624, 168.4, -442.6)
+[node name="ShortStair1_h112" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 490, 96, -966)
 use_collision = true
-size = Vector3(128, 16, 298)
+size = Vector3(140, 32, 32)
 material = ExtResource("m_raised")
 
-[node name="Wall_S" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 400, 160, -172)
+[node name="ShortStair2_h128" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 490, 104, -998)
 use_collision = true
-size = Vector3(576, 320, 16)
+size = Vector3(140, 48, 32)
+material = ExtResource("m_raised")
+
+[node name="ShortStair3_h144" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 490, 112, -1030)
+use_collision = true
+size = Vector3(140, 64, 32)
+material = ExtResource("m_raised")
+
+[node name="ShortStair4_h160" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 490, 120, -1062)
+use_collision = true
+size = Vector3(140, 80, 32)
+material = ExtResource("m_raised")
+
+[node name="Short_Corridor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 490, 152, -1614)
+use_collision = true
+size = Vector3(140, 16, 1072)
+material = ExtResource("m_raised")
+
+[node name="Short_Top" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 685, 152, -2275)
+use_collision = true
+size = Vector3(530, 16, 250)
+material = ExtResource("m_raised")
+
+[node name="SiteStep1_h176" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 920, 160, -2275)
+use_collision = true
+size = Vector3(20, 32, 250)
+material = ExtResource("m_raised")
+
+[node name="SiteStep2_h192" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 940, 168, -2275)
+use_collision = true
+size = Vector3(20, 48, 250)
+material = ExtResource("m_raised")
+
+[node name="Wall_S_Leg" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 150, 144, -820)
+use_collision = true
+size = Vector3(820, 288, 16)
 material = ExtResource("m_wall")
 
-[node name="Wall_N" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 336, 160, -300)
+[node name="Wall_N_Leg" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 80, 144, -950)
 use_collision = true
-size = Vector3(448, 320, 16)
+size = Vector3(680, 288, 16)
 material = ExtResource("m_wall")
 
-[node name="Wall_W" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 560, 160, -440)
+[node name="Wall_E_NorthLeg" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 560, 176, -1550)
 use_collision = true
-size = Vector3(16, 320, 280)
+size = Vector3(16, 352, 1200)
 material = ExtResource("m_wall")
 
-[node name="Wall_E" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 688, 160, -376)
+[node name="Wall_W_NorthLeg" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 420, 176, -1550)
 use_collision = true
-size = Vector3(16, 320, 408)
+size = Vector3(16, 352, 1200)
 material = ExtResource("m_wall")
 
-[node name="StepTest_台阶16平滑上" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 20, -236)
+[node name="Wall_N_Top" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 685, 256, -2400)
+use_collision = true
+size = Vector3(546, 192, 16)
+material = ExtResource("m_wall")
 
-[node name="JumpTest_猫道224跳下A点160" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 624, 226, -560)
+[node name="Wall_S_Top" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 755, 256, -2150)
+use_collision = true
+size = Vector3(390, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Wall_W_Top" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 420, 256, -2275)
+use_collision = true
+size = Vector3(16, 192, 250)
+material = ExtResource("m_wall")
+
+[node name="Wall_E_Corner" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 560, 144, -885)
+use_collision = true
+size = Vector3(16, 288, 146)
+material = ExtResource("m_wall")
+
+[node name="StepTest_猫道台阶" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -244, 20, -885)

@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/hdri/syferfontein_1d_clear_2k.hdr" id="t_hdri"]
 [ext_resource type="PackedScene" path="res://scenes/regions/t_spawn.tscn" id="r_tspawn"]
+[ext_resource type="PackedScene" path="res://scenes/regions/outside_long.tscn" id="r_outlong"]
 [ext_resource type="PackedScene" path="res://scenes/regions/ct_spawn.tscn" id="r_ctspawn"]
 [ext_resource type="PackedScene" path="res://scenes/regions/mid.tscn" id="r_mid"]
 [ext_resource type="PackedScene" path="res://scenes/regions/long_a.tscn" id="r_longa"]
@@ -9,7 +10,7 @@
 [ext_resource type="PackedScene" path="res://scenes/regions/a_site.tscn" id="r_asite"]
 [ext_resource type="PackedScene" path="res://scenes/regions/b_tunnels.tscn" id="r_btunnels"]
 [ext_resource type="PackedScene" path="res://scenes/regions/b_site.tscn" id="r_bsite"]
-[ext_resource type="PackedScene" path="res://scenes/regions/arch.tscn" id="r_arch"]
+[ext_resource type="PackedScene" path="res://scenes/regions/b_doors.tscn" id="r_bdoors"]
 
 [sub_resource type="PanoramaSkyMaterial" id="sky_mat"]
 panorama = ExtResource("t_hdri")
@@ -44,6 +45,8 @@ editor_description = "灰盒 dust2 地图本体（分区 + 环境 + 光照），
 
 [node name="TSpawn" parent="Regions" instance=ExtResource("r_tspawn")]
 
+[node name="OutsideLong" parent="Regions" instance=ExtResource("r_outlong")]
+
 [node name="CTSpawn" parent="Regions" instance=ExtResource("r_ctspawn")]
 
 [node name="Mid" parent="Regions" instance=ExtResource("r_mid")]
@@ -58,7 +61,7 @@ editor_description = "灰盒 dust2 地图本体（分区 + 环境 + 光照），
 
 [node name="BSite" parent="Regions" instance=ExtResource("r_bsite")]
 
-[node name="Arch" parent="Regions" instance=ExtResource("r_arch")]
+[node name="BDoors" parent="Regions" instance=ExtResource("r_bdoors")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("env")

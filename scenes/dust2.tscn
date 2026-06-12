@@ -11,7 +11,7 @@ editor_description = "单机灰盒 dust2（主场景）：地图本体见 dust2_
 [node name="Map" parent="." instance=ExtResource("m_map")]
 
 [node name="Player" parent="." instance=ExtResource("p_player")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 130, 1300)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -650, 162, 650)
 
 [node name="SpeedHUD" type="CanvasLayer" parent="."]
 script = ExtResource("s_hud")

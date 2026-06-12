@@ -5,91 +5,85 @@
 [ext_resource type="Material" path="res://resources/materials/mat_crate.tres" id="m_crate"]
 
 [node name="ASite" type="Node3D"]
-editor_description = "A 点：高台下包区（地面 y=160，x 560..1340, z -1220..-580）。南墙开猫道口(224 跳下)与长A大坡口；西墙开 CT→A 楼梯口(z -1196..-1004)。东侧渐进箱堆 48/64/96/128（相对地面），默认架点双层箱 60+120。"
+editor_description = "A 点 v2：高台 h=192，x[950,1700] z[-2800,-2100]（750x700）。入口：东南长A大坡（南墙 x[1410,1700] 开）、西南 A 短道（西墙 z[-2400,-2150]）、西 CT 楼梯（西墙 z[-2700,-2500]）。A 平台（下包台 +32 带台阶）+ 大箱96 + 双层箱64/128 + Goose96。"
 
 [node name="Floor" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 950, 152, -900)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1325, 184, -2450)
 use_collision = true
-size = Vector3(780, 16, 640)
+size = Vector3(750, 16, 700)
 material = ExtResource("m_floor")
 
 [node name="Wall_N" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 950, 256, -1220)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1325, 288, -2800)
 use_collision = true
-size = Vector3(812, 192, 16)
+size = Vector3(782, 192, 16)
 material = ExtResource("m_wall")
 
 [node name="Wall_E" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1340, 256, -900)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1700, 288, -2475)
 use_collision = true
-size = Vector3(16, 192, 672)
+size = Vector3(16, 192, 650)
 material = ExtResource("m_wall")
 
-[node name="Wall_S_Mid" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 819, 256, -580)
+[node name="Wall_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1180, 288, -2100)
 use_collision = true
-size = Vector3(262, 192, 16)
+size = Vector3(460, 192, 16)
 material = ExtResource("m_wall")
 
-[node name="Wall_S_East" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1273, 256, -580)
+[node name="Wall_W_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 950, 288, -2750)
 use_collision = true
-size = Vector3(134, 192, 16)
+size = Vector3(16, 192, 100)
 material = ExtResource("m_wall")
 
-[node name="Wall_W_North" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 560, 256, -1208)
+[node name="Wall_W_Mid" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 950, 288, -2450)
 use_collision = true
-size = Vector3(16, 192, 24)
+size = Vector3(16, 192, 100)
 material = ExtResource("m_wall")
 
-[node name="Wall_W_South" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 560, 256, -792)
+[node name="Wall_W_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 950, 288, -2125)
 use_collision = true
-size = Vector3(16, 192, 424)
+size = Vector3(16, 192, 50)
 material = ExtResource("m_wall")
 
-[node name="Crate_h48" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1180, 184, -660)
+[node name="A_Plat" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1175, 208, -2600)
 use_collision = true
-size = Vector3(96, 48, 96)
-material = ExtResource("m_crate")
+size = Vector3(350, 32, 300)
+material = ExtResource("m_floor")
 
-[node name="Crate_h64" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1180, 192, -756)
+[node name="A_Plat_Step" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1175, 200, -2440)
 use_collision = true
-size = Vector3(96, 64, 96)
-material = ExtResource("m_crate")
+size = Vector3(150, 16, 20)
+material = ExtResource("m_floor")
 
-[node name="Crate_h96" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1180, 208, -852)
+[node name="Crate_Big_96" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1480, 240, -2400)
 use_collision = true
 size = Vector3(96, 96, 96)
 material = ExtResource("m_crate")
 
-[node name="Crate_h128" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1180, 224, -948)
+[node name="Crate_Stack_Lower_64" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1600, 224, -2200)
 use_collision = true
-size = Vector3(96, 128, 96)
+size = Vector3(64, 64, 64)
 material = ExtResource("m_crate")
 
-[node name="Crate_Goose_h96" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 660, 208, -1150)
+[node name="Crate_Stack_Upper_128" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1600, 288, -2200)
+use_collision = true
+size = Vector3(64, 64, 64)
+material = ExtResource("m_crate")
+
+[node name="Crate_Goose_96" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1630, 240, -2750)
 use_collision = true
 size = Vector3(96, 96, 96)
 material = ExtResource("m_crate")
 
-[node name="Crate_Default_h60" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 900, 190, -900)
-use_collision = true
-size = Vector3(64, 60, 64)
-material = ExtResource("m_crate")
-
-[node name="Crate_Default_Top_h120" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 900, 250, -900)
-use_collision = true
-size = Vector3(64, 60, 64)
-material = ExtResource("m_crate")
-
-[node name="JumpTest_箱堆逐级48_64_96_128" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1180, 210, -660)
+[node name="Marker_A平台_下包区" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1175, 226, -2600)

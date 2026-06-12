@@ -1,0 +1,88 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Material" path="res://resources/materials/mat_floor.tres" id="m_floor"]
+[ext_resource type="Material" path="res://resources/materials/mat_wall.tres" id="m_wall"]
+
+[node name="OutsideLong" type="Node3D"]
+editor_description = "出生口外（outside long）v2：x[-200,620] z[-520,560]。南段 160（接 T 家）经坡（z[-100,300]）降到北段 96。东墙 x=620 开 Long Doors（A 大门）：双 100 宽门洞+中柱，朝向=向东穿门，过门即长A拐角。"
+
+[node name="Floor_South" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 210, 152, 430)
+use_collision = true
+size = Vector3(820, 16, 260)
+material = ExtResource("m_floor")
+
+[node name="Slope" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.98744, 0.15799, 0, -0.15799, 0.98744, 210, 120.1, 101.3)
+use_collision = true
+size = Vector3(820, 16, 406)
+material = ExtResource("m_floor")
+
+[node name="Floor_North" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 210, 88, -310)
+use_collision = true
+size = Vector3(820, 16, 420)
+material = ExtResource("m_floor")
+
+[node name="Wall_W" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -200, 224, -110)
+use_collision = true
+size = Vector3(16, 256, 820)
+material = ExtResource("m_wall")
+
+[node name="Wall_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 210, 224, -520)
+use_collision = true
+size = Vector3(852, 256, 16)
+material = ExtResource("m_wall")
+
+[node name="Wall_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 210, 224, 560)
+use_collision = true
+size = Vector3(852, 256, 16)
+material = ExtResource("m_wall")
+
+[node name="Wall_E_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 620, 224, -480)
+use_collision = true
+size = Vector3(16, 256, 80)
+material = ExtResource("m_wall")
+
+[node name="Wall_E_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 620, 224, 190)
+use_collision = true
+size = Vector3(16, 256, 740)
+material = ExtResource("m_wall")
+
+[node name="LongDoors_Post_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 648, 192, -432)
+use_collision = true
+size = Vector3(16, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="LongDoors_Post_Center" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 648, 192, -310)
+use_collision = true
+size = Vector3(16, 192, 28)
+material = ExtResource("m_wall")
+
+[node name="LongDoors_Post_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 648, 192, -188)
+use_collision = true
+size = Vector3(16, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="LongDoors_Lintel" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 648, 256, -310)
+use_collision = true
+size = Vector3(16, 64, 260)
+material = ExtResource("m_wall")
+
+[node name="LongDoors_Roof" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 648, 296, -310)
+use_collision = true
+size = Vector3(120, 16, 276)
+material = ExtResource("m_wall")
+
+[node name="Marker_A大门_向东穿门" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 580, 98, -310)
