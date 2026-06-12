@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="WeaponParams" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/weapons/weapon_params.gd" id="1_wp"]
+
+[resource]
+script = ExtResource("1_wp")
+weapon_name = "AK-47"
+damage = 36.0
+fire_interval = 0.1
+magazine_size = 30
+reserve_ammo = 90
+reload_time = 2.45
+range_modifier = 0.98
+max_range = 8192.0
+headshot_multiplier = 4.0
+auto_fire = true
+spread_stand = 0.08
+spread_duck_multiplier = 0.6
+spread_move = 1.6
+spread_air = 3.0
+move_spread_speed_threshold = 140.0
+view_punch_per_shot = 0.9
+view_punch_recovery = 8.0
+pattern_recovery_time = 0.55
+spray_pattern = Array[Vector2]([Vector2(0, 0), Vector2(0.02, 0.25), Vector2(-0.03, 0.65), Vector2(0.05, 1.3), Vector2(-0.08, 2.2), Vector2(0.12, 3.2), Vector2(-0.15, 4.3), Vector2(0.25, 5.3), Vector2(-0.4, 6.1), Vector2(0.65, 6.8), Vector2(-1.0, 7.3), Vector2(1.35, 7.7), Vector2(-1.7, 7.95), Vector2(2.0, 8.1), Vector2(-2.2, 8.2), Vector2(2.35, 8.3), Vector2(-2.45, 8.35), Vector2(2.5, 8.4), Vector2(-2.5, 8.45), Vector2(2.45, 8.5), Vector2(-2.35, 8.5), Vector2(2.2, 8.55), Vector2(-2.05, 8.55), Vector2(1.9, 8.6), Vector2(-1.8, 8.6), Vector2(1.75, 8.6), Vector2(-1.7, 8.65), Vector2(1.7, 8.65), Vector2(-1.7, 8.65), Vector2(1.7, 8.7)])
