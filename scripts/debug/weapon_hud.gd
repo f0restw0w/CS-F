@@ -34,7 +34,11 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(_weapon):
-		_weapon = get_tree().get_first_node_in_group("weapon") as HitscanWeapon
+		# 联机时只取本地玩家的武器
+		for w in get_tree().get_nodes_in_group("weapon"):
+			if w is HitscanWeapon and is_instance_valid(w._player) and w._player.is_local:
+				_weapon = w
+				break
 		if _weapon == null:
 			return
 		_weapon.hit_target.connect(_on_hit)

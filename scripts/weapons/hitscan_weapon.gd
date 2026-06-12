@@ -8,6 +8,8 @@ class_name HitscanWeapon
 ## 视角 punch 只是视觉上抬并回落，不参与命中计算（1.6 同）。
 
 signal fired(shot_index: int)
+## 本发子弹的射线（起点+方向），联机层转发给服务器做权威命中校验
+signal fired_ray(from: Vector3, dir: Vector3)
 signal hit_target(damage: float, is_head: bool, target: Node)
 signal ammo_changed(mag: int, reserve: int)
 signal reload_state_changed(reloading: bool)
@@ -124,6 +126,7 @@ func _fire() -> void:
 	_punch = minf(_punch + params.view_punch_per_shot, 12.0)
 	_audio.play()
 	fired.emit(_shot_index)
+	fired_ray.emit(from, dir)
 	ammo_changed.emit(mag, reserve)
 
 	var muzzle_pos := _muzzle.global_position if _muzzle else from

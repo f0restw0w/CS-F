@@ -1,0 +1,69 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/dust2_map.tscn" id="m_map"]
+[ext_resource type="Script" path="res://scripts/net/network_manager.gd" id="s_net"]
+[ext_resource type="Script" path="res://scripts/net/lobby_ui.gd" id="s_lobby"]
+[ext_resource type="Script" path="res://scripts/debug/speed_hud.gd" id="s_hud"]
+[ext_resource type="Script" path="res://scripts/debug/weapon_hud.gd" id="s_whud"]
+
+[node name="Dust2MP" type="Node3D"]
+editor_description = "联机灰盒 dust2：服务器权威 + 客户端预测回滚。运行后点 主机/加入；专服: godot --headless res://scenes/dust2_mp.tscn -- --server [端口]；自动连接: -- --connect ip[:端口]"
+
+[node name="Map" parent="." instance=ExtResource("m_map")]
+
+[node name="Players" type="Node3D" parent="."]
+
+[node name="NetworkManager" type="Node" parent="."]
+script = ExtResource("s_net")
+
+[node name="SpeedHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_hud")
+
+[node name="WeaponHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_whud")
+
+[node name="Lobby" type="CanvasLayer" parent="."]
+script = ExtResource("s_lobby")
+
+[node name="Panel" type="Panel" parent="Lobby"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -110.0
+offset_right = 160.0
+offset_bottom = 110.0
+
+[node name="VBox" type="VBoxContainer" parent="Lobby/Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = -12.0
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Lobby/Panel/VBox"]
+layout_mode = 2
+text = "cs16-revival 联机"
+horizontal_alignment = 1
+
+[node name="HostBtn" type="Button" parent="Lobby/Panel/VBox"]
+layout_mode = 2
+text = "做主机（端口 27015）"
+
+[node name="IP" type="LineEdit" parent="Lobby/Panel/VBox"]
+layout_mode = 2
+text = "127.0.0.1"
+placeholder_text = "服务器 IP"
+
+[node name="JoinBtn" type="Button" parent="Lobby/Panel/VBox"]
+layout_mode = 2
+text = "加入"
+
+[node name="Status" type="Label" parent="Lobby/Panel/VBox"]
+layout_mode = 2
+horizontal_alignment = 1

@@ -20,7 +20,11 @@ func _ready() -> void:
 
 func _physics_process(_delta: float) -> void:
 	if not is_instance_valid(_player):
-		_player = get_tree().get_first_node_in_group("player") as PlayerController
+		# 联机时场景里有多个玩家节点，只显示本地玩家
+		for p in get_tree().get_nodes_in_group("player"):
+			if p is PlayerController and p.is_local:
+				_player = p
+				break
 		if _player == null:
 			return
 
