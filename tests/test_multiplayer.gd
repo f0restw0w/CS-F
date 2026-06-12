@@ -78,7 +78,7 @@ func _run() -> void:
 		await physics_frame
 	var speed := player.horizontal_speed()
 	check("联机连跳后速度合理（实测 %.1f ≤ 450）" % speed, speed <= 450.0 and is_finite(speed))
-	check("位置未发散（|y| < 200）", absf(player.global_position.y) < 200.0)
+	check("位置未发散（|y| < 400，T 家高地 128 基准）", absf(player.global_position.y) < 400.0)
 	check("回滚后误差仍收敛（%.3f < 2.0）" % manager.last_correction_error,
 			manager.last_correction_error < 2.0)
 

@@ -39,7 +39,7 @@ func _run() -> void:
 	for i in 50:
 		await physics_frame
 	check("出生后落地（grounded）", player.grounded)
-	check("落点贴地（y ≈ 0）", absf(player.global_position.y) < 4.0)
+	check("落点贴 T 家高地（y ≈ 128）", absf(player.global_position.y - 128.0) < 4.0)
 
 	# 2) 直线跑加速到 sv_maxspeed=320
 	#    只跑 0.8 秒（约 230 单位）——再远会撞上中路 Xbox 箱（正面 clip 会把速度归零）
@@ -63,7 +63,7 @@ func _run() -> void:
 	#    速率应明显超过起跳时速率（air strafe 转向加速的标志）
 	for i in 60:
 		await physics_frame  # 等落地稳定
-	player.global_position = Vector3(700, 2, -640)
+	player.global_position = Vector3(700, 162, -640)
 	player.rotation = Vector3.ZERO
 	player.velocity = Vector3.ZERO
 	for i in 10:
@@ -94,7 +94,7 @@ func _run() -> void:
 	# —— Phase 1：蹲 / duck-jump ——
 
 	# 6) 地面蹲：0.4s 过渡后 hull 切换、眼高 30、蹲速 ≈ 320*0.333 ≈ 106.6
-	player.global_position = Vector3(0, 2, 1300)
+	player.global_position = Vector3(0, 130, 1300)
 	player.rotation = Vector3.ZERO
 	player.velocity = Vector3.ZERO
 	for i in 30:
@@ -169,12 +169,12 @@ func _run() -> void:
 
 	# 10) B 隧道（含 S 弯）全程路点通行：每个路点落地且高度正确，防墙体堵路
 	var waypoints: Array = [
-		["上隧道", Vector3(-742, 2, 1096), 0.0],
-		["S1 上段", Vector3(-1004, 2, 700), 0.0],
-		["S1 下段(-64)", Vector3(-1004, -62, 232), -64.0],
-		["肘部拐弯(-64)", Vector3(-1052, -62, 100), -64.0],
-		["S2 段(-64)", Vector3(-1100, -62, -228), -64.0],
-		["B 点入口", Vector3(-1100, 2, -610), 0.0],
+		["上隧道(64)", Vector3(-900, 66, 1096), 64.0],
+		["S1 上段(64)", Vector3(-1004, 66, 700), 64.0],
+		["S1 下段(0)", Vector3(-1004, 2, 232), 0.0],
+		["肘部拐弯(0)", Vector3(-1052, 2, 100), 0.0],
+		["S2 段(0)", Vector3(-1100, 2, -228), 0.0],
+		["B 点入口(0)", Vector3(-1100, 2, -610), 0.0],
 	]
 	for wp in waypoints:
 		player.global_position = wp[1]
@@ -183,6 +183,36 @@ func _run() -> void:
 			await physics_frame
 		check("隧道路点[%s]落地且高度对（y=%.1f≈%.0f）" % [wp[0], player.global_position.y, wp[2]],
 				player.grounded and absf(player.global_position.y - wp[2]) < 6.0)
+
+	# 11) 标高坡道：T 家走下中路大坡（128→0），全程贴地不弹跳
+	player.global_position = Vector3(0, 130, 1000)
+	player.rotation = Vector3.ZERO
+	player.velocity = Vector3.ZERO
+	for i in 20:
+		await physics_frame
+	Input.action_press("move_forward")
+	var air_ticks := 0
+	for i in 150:
+		if not player.grounded:
+			air_ticks += 1
+		await physics_frame
+	Input.action_release("move_forward")
+	check("走下中路大坡贴地（空中 tick=%d ≤ 5）" % air_ticks, air_ticks <= 5)
+	check("到达中路平面（y=%.1f ≈ 0）" % player.global_position.y,
+			absf(player.global_position.y) < 6.0)
+
+	# 12) 长 A 大坡：直道(64)跑上 A 点(160)
+	player.global_position = Vector3(1078, 66, -200)
+	player.rotation = Vector3.ZERO
+	player.velocity = Vector3.ZERO
+	for i in 20:
+		await physics_frame
+	Input.action_press("move_forward")
+	for i in 140:
+		await physics_frame
+	Input.action_release("move_forward")
+	check("跑上长A大坡抵达 A 点（y=%.1f ≈ 160）" % player.global_position.y,
+			absf(player.global_position.y - 160.0) < 6.0)
 
 	_finish()
 

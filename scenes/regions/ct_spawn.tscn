@@ -1,10 +1,11 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Material" path="res://resources/materials/mat_floor.tres" id="m_floor"]
 [ext_resource type="Material" path="res://resources/materials/mat_wall.tres" id="m_wall"]
+[ext_resource type="Material" path="res://resources/materials/mat_raised.tres" id="m_raised"]
 
 [node name="CTSpawn" type="Node3D"]
-editor_description = "CT 出生点：768x512 平地（x -384..384, z -1300..-788）。南墙留中路口(x -112..112)，东墙留 CT→A 通道口(z -1196..-1004)，西墙留拱门通道口(z -1196..-1004)。"
+editor_description = "CT 出生点：768x512 平地（地面 0，x -384..384, z -1300..-788）。南墙留中路口，西墙留拱门口。东侧 CT→A 楼梯通道（x 384..560，10 级 16 高台阶 0→160 上 A 点）。"
 
 [node name="Floor" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8, -1044)
@@ -53,6 +54,81 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -384, 96, -896)
 use_collision = true
 size = Vector3(16, 192, 216)
 material = ExtResource("m_wall")
+
+[node name="CTA_Wall_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 472, 176, -1196)
+use_collision = true
+size = Vector3(176, 352, 16)
+material = ExtResource("m_wall")
+
+[node name="CTA_Wall_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 472, 176, -1004)
+use_collision = true
+size = Vector3(176, 352, 16)
+material = ExtResource("m_wall")
+
+[node name="CTA_Step1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 392.8, 0, -1100)
+use_collision = true
+size = Vector3(17.6, 32, 192)
+material = ExtResource("m_raised")
+
+[node name="CTA_Step2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 410.4, 8, -1100)
+use_collision = true
+size = Vector3(17.6, 48, 192)
+material = ExtResource("m_raised")
+
+[node name="CTA_Step3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 428, 16, -1100)
+use_collision = true
+size = Vector3(17.6, 64, 192)
+material = ExtResource("m_raised")
+
+[node name="CTA_Step4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 445.6, 24, -1100)
+use_collision = true
+size = Vector3(17.6, 80, 192)
+material = ExtResource("m_raised")
+
+[node name="CTA_Step5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 463.2, 32, -1100)
+use_collision = true
+size = Vector3(17.6, 96, 192)
+material = ExtResource("m_raised")
+
+[node name="CTA_Step6" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 480.8, 40, -1100)
+use_collision = true
+size = Vector3(17.6, 112, 192)
+material = ExtResource("m_raised")
+
+[node name="CTA_Step7" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 498.4, 48, -1100)
+use_collision = true
+size = Vector3(17.6, 128, 192)
+material = ExtResource("m_raised")
+
+[node name="CTA_Step8" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 516, 56, -1100)
+use_collision = true
+size = Vector3(17.6, 144, 192)
+material = ExtResource("m_raised")
+
+[node name="CTA_Step9" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 533.6, 64, -1100)
+use_collision = true
+size = Vector3(17.6, 160, 192)
+material = ExtResource("m_raised")
+
+[node name="CTA_Step10" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 551.2, 72, -1100)
+use_collision = true
+size = Vector3(17.6, 176, 192)
+material = ExtResource("m_raised")
+
+[node name="StepTest_CT上A楼梯" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 392, 34, -1100)
 
 [node name="Spawn_CT1" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1100)

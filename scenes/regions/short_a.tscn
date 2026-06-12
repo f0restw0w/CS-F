@@ -4,7 +4,7 @@
 [ext_resource type="Material" path="res://resources/materials/mat_raised.tres" id="m_raised"]
 
 [node name="ShortA" type="Node3D"]
-editor_description = "A 短道/猫道：从中路东口(z -300..-172)经 4 级 16 高台阶上到 64 高猫道（宽 128），L 形：东向腿(x 240..688) + 北向腿(x 560..688, z -580..-300)，北端接 A 点南墙口（落入 A 点为 64 高低差跳下，测落地保速）。台阶 16 ≤ step 18，应可平滑走上。"
+editor_description = "A 短道/猫道（标高：中路 0 → 台阶 64 → 东腿坡 64→128 → 拐角平台 128 → 北腿坡 128→224 → 跳下 A 点 160，落差 64）。窄道宽 128。台阶 16 ≤ step 18。"
 
 [node name="Step1_h16" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 0, -236)
@@ -30,44 +30,50 @@ use_collision = true
 size = Vector3(32, 80, 128)
 material = ExtResource("m_raised")
 
-[node name="Catwalk_East" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 464, 24, -236)
+[node name="Cat_Ramp_East" type="CSGBox3D" parent="."]
+transform = Transform3D(0.98058, -0.19612, 0, 0.19612, 0.98058, 0, 0, 0, 1, 401.6, 88.2, -236)
 use_collision = true
-size = Vector3(448, 80, 128)
+size = Vector3(328, 16, 128)
 material = ExtResource("m_raised")
 
-[node name="Catwalk_North" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 624, 24, -440)
+[node name="Cat_Corner_h128" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 624, 120, -236)
 use_collision = true
-size = Vector3(128, 80, 280)
+size = Vector3(128, 16, 128)
+material = ExtResource("m_raised")
+
+[node name="Cat_Ramp_North" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.94593, -0.32444, 0, 0.32444, 0.94593, 624, 168.4, -442.6)
+use_collision = true
+size = Vector3(128, 16, 298)
 material = ExtResource("m_raised")
 
 [node name="Wall_S" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 400, 96, -172)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 400, 160, -172)
 use_collision = true
-size = Vector3(576, 192, 16)
+size = Vector3(576, 320, 16)
 material = ExtResource("m_wall")
 
 [node name="Wall_N" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 336, 96, -300)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 336, 160, -300)
 use_collision = true
-size = Vector3(448, 192, 16)
+size = Vector3(448, 320, 16)
 material = ExtResource("m_wall")
 
 [node name="Wall_W" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 560, 96, -440)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 560, 160, -440)
 use_collision = true
-size = Vector3(16, 192, 280)
+size = Vector3(16, 320, 280)
 material = ExtResource("m_wall")
 
 [node name="Wall_E" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 688, 96, -376)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 688, 160, -376)
 use_collision = true
-size = Vector3(16, 192, 408)
+size = Vector3(16, 320, 408)
 material = ExtResource("m_wall")
 
 [node name="StepTest_台阶16平滑上" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 20, -236)
 
-[node name="JumpTest_猫道跳下A点保速" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 624, 66, -560)
+[node name="JumpTest_猫道224跳下A点160" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 624, 226, -560)

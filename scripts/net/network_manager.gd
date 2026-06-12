@@ -28,7 +28,7 @@ const HISTORY_MAX := 256
 @export var players_container: NodePath = ^"../Players"
 ## 出生点轮转（T 家 + CT 家混排，死斗式）
 @export var spawn_points: Array[Vector3] = [
-	Vector3(0, 2, 1300), Vector3(-120, 2, 1320), Vector3(120, 2, 1320),
+	Vector3(0, 130, 1300), Vector3(-120, 130, 1320), Vector3(120, 130, 1320),
 	Vector3(0, 2, -1100), Vector3(-120, 2, -1120), Vector3(120, 2, -1120),
 ]
 
