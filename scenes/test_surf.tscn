@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="p_player"]
+[ext_resource type="Script" path="res://scripts/debug/speed_hud.gd" id="s_hud"]
+[ext_resource type="Material" path="res://resources/materials/mat_raised.tres" id="m_ramp"]
+[ext_resource type="Material" path="res://resources/materials/mat_floor.tres" id="m_floor"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+
+[node name="SurfTest" type="Node3D"]
+editor_description = "surf 测试图（Phase 1）：60° 斜面（法线 y=0.5 < 0.7 阈值 → 不算地面、无摩擦），从平台左侧(-x)下到斜面，贴面下滑加速，按住朝坡的方向键（D）保持贴面，鼠标+strafe 可沿 z 向滑行。掉落自动回出生平台。"
+
+[node name="Ramp_60deg" type="CSGBox3D" parent="."]
+transform = Transform3D(0.5, -0.866025, 0, 0.866025, 0.5, 0, 0, 0, 1, 0, 220, 0)
+use_collision = true
+size = Vector3(512, 64, 2400)
+material = ExtResource("m_ramp")
+
+[node name="SpawnPlatform" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 200, 462, 1000)
+use_collision = true
+size = Vector3(192, 16, 192)
+material = ExtResource("m_floor")
+
+[node name="Player" parent="." instance=ExtResource("p_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 200, 472, 1000)
+
+[node name="SpeedHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_hud")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 2000, 0)
+shadow_enabled = true
+directional_shadow_max_distance = 4000.0
+
+[node name="SurfStart_从平台往左下斜面" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 460, 1000)
