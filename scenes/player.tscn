@@ -1,11 +1,24 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_pc"]
 [ext_resource type="Script" path="res://scripts/player/camera_controller.gd" id="2_cam"]
 [ext_resource type="Resource" path="res://resources/movement_params.tres" id="3_params"]
+[ext_resource type="Script" path="res://scripts/weapons/hitscan_weapon.gd" id="4_wpn"]
+[ext_resource type="Resource" path="res://resources/weapons/ak47.tres" id="5_ak"]
 
 [sub_resource type="BoxShape3D" id="hull"]
 size = Vector3(32, 72, 32)
+
+[sub_resource type="StandardMaterial3D" id="gun_mat"]
+albedo_color = Color(0.15, 0.15, 0.17, 1)
+
+[sub_resource type="BoxMesh" id="gun_mesh"]
+size = Vector3(3, 3.5, 18)
+material = SubResource("gun_mat")
+
+[sub_resource type="BoxMesh" id="gun_grip"]
+size = Vector3(2.4, 5, 3)
+material = SubResource("gun_mat")
 
 [node name="Player" type="CharacterBody3D"]
 safe_margin = 0.05
@@ -24,3 +37,18 @@ script = ExtResource("2_cam")
 fov = 73.74
 near = 1.0
 far = 16000.0
+
+[node name="Weapon" type="Node3D" parent="Head/Camera3D"]
+script = ExtResource("4_wpn")
+params = ExtResource("5_ak")
+
+[node name="GunModel" type="MeshInstance3D" parent="Head/Camera3D/Weapon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, -6, -16)
+mesh = SubResource("gun_mesh")
+
+[node name="GunGrip" type="MeshInstance3D" parent="Head/Camera3D/Weapon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, -8.5, -10)
+mesh = SubResource("gun_grip")
+
+[node name="Muzzle" type="Marker3D" parent="Head/Camera3D/Weapon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, -5.2, -25.5)
