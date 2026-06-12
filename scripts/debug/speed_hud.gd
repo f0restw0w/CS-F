@@ -30,11 +30,12 @@ func _physics_process(_delta: float) -> void:
 	if _player.grounded and hspeed < 1.0:
 		_peak_speed = 0.0
 
-	_label.text = "速度  %6.1f\n垂直  %+6.1f\n峰值  %6.1f\n%s%s\ntick %d" % [
+	_label.text = "速度  %6.1f\n垂直  %+6.1f\n峰值  %6.1f\n%s%s%s\ntick %d" % [
 		hspeed,
 		_player.vertical_speed(),
 		_peak_speed,
 		"地面" if _player.grounded else "空中",
+		"  [蹲]" if _player.ducked else "",
 		"  [连跳保速]" if _player.bhop_preserved else "",
 		Engine.physics_ticks_per_second,
 	]

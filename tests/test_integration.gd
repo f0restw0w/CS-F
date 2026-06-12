@@ -91,6 +91,82 @@ func _run() -> void:
 	# 5) 全程没有掉出地图
 	check("未掉出地图（y > -200）", player.global_position.y > -200.0)
 
+	# —— Phase 1：蹲 / duck-jump ——
+
+	# 6) 地面蹲：0.4s 过渡后 hull 切换、眼高 30、蹲速 ≈ 320*0.333 ≈ 106.6
+	player.global_position = Vector3(0, 2, 1300)
+	player.rotation = Vector3.ZERO
+	player.velocity = Vector3.ZERO
+	for i in 30:
+		await physics_frame
+	Input.action_press("duck")
+	for i in 50:
+		await physics_frame  # 0.5s > TIME_TO_DUCK
+	check("地面蹲 0.4s 后完全蹲下", player.ducked)
+	check("蹲下眼高 ≈ 30（实测 %.1f）" % player.get_node("Head").position.y,
+			absf(player.get_node("Head").position.y - 30.0) < 1.0)
+	Input.action_press("move_forward")
+	for i in 150:
+		await physics_frame
+	var duck_speed := player.horizontal_speed()
+	Input.action_release("move_forward")
+	check("蹲走限速 ≈ 106.6（实测 %.1f）" % duck_speed,
+			duck_speed > 100.0 and duck_speed < 112.0)
+
+	# 7) 站起恢复
+	Input.action_release("duck")
+	for i in 20:
+		await physics_frame
+	check("松开蹲后站起", not player.ducked)
+	check("站立眼高恢复 64（实测 %.1f）" % player.get_node("Head").position.y,
+			absf(player.get_node("Head").position.y - 64.0) < 1.0)
+
+	# 8) duck-jump：空中蹲脚抬 18，脚部顶点 ≈ 45+18 = 63（普通跳 ≈ 45）
+	player.velocity = Vector3.ZERO
+	for i in 30:
+		await physics_frame
+	var ground_y := player.global_position.y
+	Input.action_press("jump")
+	await physics_frame
+	await physics_frame
+	Input.action_release("jump")
+	for i in 5:
+		await physics_frame
+	Input.action_press("duck")
+	var apex := 0.0
+	for i in 80:
+		apex = maxf(apex, player.global_position.y - ground_y)
+		await physics_frame
+	Input.action_release("duck")
+	for i in 20:
+		await physics_frame
+	check("duck-jump 脚部顶点 ≈ 63（实测 %.1f，普通跳 ≈ 45）" % apex,
+			apex > 55.0 and apex < 72.0)
+
+	# 9) 低顶卡蹲：头顶放障碍（占 feet+46..62），松蹲不能站起；移除后自动站起
+	Input.action_press("duck")
+	for i in 50:
+		await physics_frame
+	check("低顶测试前提：已蹲下", player.ducked)
+	var ceiling := StaticBody3D.new()
+	var cs := CollisionShape3D.new()
+	var bs := BoxShape3D.new()
+	bs.size = Vector3(200, 16, 200)
+	cs.shape = bs
+	ceiling.add_child(cs)
+	root.add_child(ceiling)
+	ceiling.global_position = player.global_position + Vector3(0, 54, 0)
+	for i in 5:
+		await physics_frame
+	Input.action_release("duck")
+	for i in 20:
+		await physics_frame
+	check("低顶下松蹲仍保持蹲（卡蹲）", player.ducked)
+	ceiling.queue_free()
+	for i in 20:
+		await physics_frame
+	check("移除低顶后自动站起", not player.ducked)
+
 	_finish()
 
 
