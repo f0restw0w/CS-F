@@ -167,6 +167,23 @@ func _run() -> void:
 		await physics_frame
 	check("移除低顶后自动站起", not player.ducked)
 
+	# 10) B 隧道（含 S 弯）全程路点通行：每个路点落地且高度正确，防墙体堵路
+	var waypoints: Array = [
+		["上隧道", Vector3(-742, 2, 1096), 0.0],
+		["S1 上段", Vector3(-1004, 2, 700), 0.0],
+		["S1 下段(-64)", Vector3(-1004, -62, 232), -64.0],
+		["肘部拐弯(-64)", Vector3(-1052, -62, 100), -64.0],
+		["S2 段(-64)", Vector3(-1100, -62, -228), -64.0],
+		["B 点入口", Vector3(-1100, 2, -610), 0.0],
+	]
+	for wp in waypoints:
+		player.global_position = wp[1]
+		player.velocity = Vector3.ZERO
+		for i in 20:
+			await physics_frame
+		check("隧道路点[%s]落地且高度对（y=%.1f≈%.0f）" % [wp[0], player.global_position.y, wp[2]],
+				player.grounded and absf(player.global_position.y - wp[2]) < 6.0)
+
 	_finish()
 
 

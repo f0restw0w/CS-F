@@ -43,6 +43,12 @@ use_collision = true
 size = Vector3(16, 192, 24)
 material = ExtResource("m_wall")
 
+[node name="LongDoors_Lintel" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 660, 160, 1100)
+use_collision = true
+size = Vector3(16, 64, 200)
+material = ExtResource("m_wall")
+
 [node name="Corridor_Floor" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1078, -8, 310)
 use_collision = true
