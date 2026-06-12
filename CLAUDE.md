@@ -10,7 +10,7 @@
 
 ## 当前阶段
 
-**Phase 0 已验收；Phase 1-4 已实现，等负责人一次性验收**（进度见 `PROGRESS.md`，待复核决策见 `DECISIONS_FOR_REVIEW.md`）。已有：GoldSrc 移动全套（bhop/air strafe/duck/surf/台阶平滑）、AK-47 hitscan 武器（弹道模式/扩散/后坐力）、引擎内现代光照、服务器权威+客户端预测的联机移动与射击。**未做**：参数锁定（负责人专属）、lag compensation、正式 hitbox、美术资产替换。验收通过前不开新功能。
+**Phase 0 — 移动控制器原型。** 在做任何其他东西之前，先做出一个能让人闭眼都觉得"这就是 1.6"的移动控制器。一张测试图、一个胶囊体、能跑能跳能连跳能空中转身。**不要**提前去做武器、联机、UI、美术。
 
 ## 绝对原则（NON-NEGOTIABLE）
 
@@ -35,9 +35,14 @@ cs16-revival/
 ├── CLAUDE.md                  # 本文件
 ├── README.md                  # 人类看的项目说明
 ├── docs/
+│   ├── VISION.md             # 产品愿景：要复刻 1.6 的哪些体验（统领）
 │   ├── MOVEMENT_SPEC.md       # 1.6 移动物理规范（最重要的技术文档）
-│   ├── MAP_DUST2.md           # de_dust2 灰盒重建布局规格
+│   ├── MOVEMENT_PHASE1.md    # Phase 1 移动手感规格（蹲/surf/台阶）
+│   ├── MAP_DUST2.md           # de_dust2 灰盒重建布局规格（几何还原）
+│   ├── ART_DUST2.md          # de_dust2 美术方向（合法纹理与视觉氛围）
 │   ├── BUILD_PLAN.md          # 自主模式分步开工指令（先读这个）
+│   ├── FUTURE_PHASES.md      # 后续 Phase 预规划（武器/音效/联机要点）
+│   ├── GLOSSARY.md           # 1.6 名词与数值速查
 │   ├── ARCHITECTURE.md        # 代码架构与目录约定
 │   ├── ROADMAP.md             # 分阶段路线图
 │   └── TESTING.md             # 手感验证清单与测试方法
