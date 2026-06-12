@@ -225,10 +225,17 @@ func _walk_move(delta: float) -> void:
 		if snap and snap.get_normal().y >= GROUND_NORMAL_MIN_Y:
 			move_and_collide(Vector3(0, -STEP_HEIGHT, 0))
 
+	# 台阶视角平滑：地面位移的垂直跳变记入偏移，由 _update_eye 按 150 u/s 衰减
+	# （HL V_CalcRefdef 的 stair smoothing）
+	var dy := global_position.y - start_pos.y
+	if absf(dy) > 0.01:
+		_step_offset = clampf(_step_offset - dy, -STEP_HEIGHT, STEP_HEIGHT)
+
 
 ## —— 视角高度（眼高 + 台阶平滑）——
 
 func _update_eye(delta: float) -> void:
+	_step_offset = move_toward(_step_offset, 0.0, params.step_smooth_speed * delta)
 	var eye: float
 	if ducked:
 		eye = params.duck_eye_height
