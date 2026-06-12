@@ -1,7 +1,43 @@
-# PROGRESS.md — Phase 0 进度日志
+# PROGRESS.md — 进度日志
 
-> 自主模式执行 `docs/BUILD_PLAN.md` Phase 0。已全部完成，等负责人验收。
+> Phase 0 已验收通过。Phase 1（移动手感打磨）已完成，等负责人验收。
 > 决策复核清单见 `DECISIONS_FOR_REVIEW.md`。
+
+---
+
+# Phase 1 — 移动手感打磨（2026-06-12）
+
+## P1-1 蹲参数 + duck 输入 ✅
+- `MovementParams` 新增蹲组参数（全部 HL SDK 常量，注释标明出处）+ `duck` 键（Ctrl）。
+
+## P1-2 duck + duck-jump ✅ [FEEL]
+- 地面蹲 0.4s 过渡（眼高随进度下移，结束切 hull 72→36）；空中蹲**瞬时 + 脚抬 18** = duck-jump（脚部顶点 45→61.7，可上 64 箱）。
+- 站起空间检测（低顶卡蹲、每 tick 重试）；完全蹲下 wishspeed×0.333。
+- HUD 加 [蹲] 标记。
+
+## P1-3 台阶视角平滑 ✅ [FEEL]
+- 上/下台阶的垂直跳变转为相机偏移，150 u/s 衰减（HL V_CalcRefdef），纯视角层不碰物理。
+
+## P1-4 surf 验证 ✅ [FEEL]
+- **结论：Phase 0 物理天然支持 surf，零代码改动。**自由滑 0.6s 加速到 415.7；压坡骑面可爬升。
+- 新增 `scenes/test_surf.tscn`（60° 坡练习图）+ `tests/test_surf.gd`（8 断言）。
+
+## P1-5 回归与文档 ✅（本 commit）
+- 单元 30 + 集成 16 + surf 8 = **54 断言全过**，游戏无头跑 300 帧无报错。
+
+## Phase 1 验收指引（增量）
+1. **蹲**：Ctrl 蹲走（HUD 应 ~106.6）、蹲下急停、蹲眼高是否对（30）。
+2. **duck-jump**：A 点箱堆跳 64 箱（起跳后空中按 Ctrl）；时机窗口手感。
+3. **卡蹲**：蹲进低处（自建或测试图）松 Ctrl 不应弹起穿模。
+4. **楼梯**：B 隧道台阶、猫道台阶、B plat 楼梯连续上下——镜头应平滑不顿挫（不对就调 `step_smooth_speed`）。
+5. **surf**：运行 `scenes/test_surf.tscn`（编辑器里打开该场景按 F6，或临时改主场景）：平台左侧下坡，按 D 压坡，鼠标顺坡转向。自由滑应持续加速，压坡能骑面。
+6. 参数全在 `movement_params.tres`，满意后由你**锁定**（建议打 tag `movement-params-v1`）。
+
+> 未做（按约定）：Shift 走路键、连跳上限逻辑、参数锁定。Phase 2 未动。
+
+---
+
+# Phase 0 进度日志（已验收）
 
 ## Step 1 — 项目骨架 ✅ `e7b096b`
 - `project.godot`：`physics_ticks_per_second = 100`（固定步长，1.6 手感对 tick 敏感），WASD+空格输入映射，主场景指向 `scenes/dust2.tscn`。
