@@ -1,0 +1,62 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="p_player"]
+[ext_resource type="PackedScene" path="res://scenes/training/shooting_target.tscn" id="t_target"]
+[ext_resource type="Script" path="res://scripts/debug/speed_hud.gd" id="s_hud"]
+[ext_resource type="Script" path="res://scripts/debug/weapon_hud.gd" id="s_whud"]
+[ext_resource type="Material" path="res://resources/materials/mat_floor.tres" id="m_floor"]
+[ext_resource type="Material" path="res://resources/materials/mat_wall.tres" id="m_wall"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+
+[node name="TestRange" type="Node3D"]
+editor_description = "靶场（Phase 2）：玩家在 z=900 朝 -z，靶子距离 256/512/1024/2048。直射中靶头(眼高64 vs 头区56..68)，稍压枪打身体。后墙看弹道模式落点。"
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8, -100)
+use_collision = true
+size = Vector3(1024, 16, 2400)
+material = ExtResource("m_floor")
+
+[node name="BackWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 96, -1300)
+use_collision = true
+size = Vector3(1024, 192, 16)
+material = ExtResource("m_wall")
+
+[node name="Target_256" parent="." instance=ExtResource("t_target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 644)
+
+[node name="Target_512" parent="." instance=ExtResource("t_target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -96, 0, 388)
+
+[node name="Target_1024" parent="." instance=ExtResource("t_target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 96, 0, -124)
+
+[node name="Target_2048" parent="." instance=ExtResource("t_target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1148)
+
+[node name="Player" parent="." instance=ExtResource("p_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 900)
+
+[node name="SpeedHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_hud")
+
+[node name="WeaponHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_whud")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 2000, 0)
+shadow_enabled = true
+directional_shadow_max_distance = 4000.0

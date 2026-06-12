@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/regions/t_spawn.tscn" id="r_tspawn"]
 [ext_resource type="PackedScene" path="res://scenes/regions/ct_spawn.tscn" id="r_ctspawn"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" path="res://scenes/regions/arch.tscn" id="r_arch"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="p_player"]
 [ext_resource type="Script" path="res://scripts/debug/speed_hud.gd" id="s_hud"]
+[ext_resource type="Script" path="res://scripts/debug/weapon_hud.gd" id="s_whud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
 
@@ -50,6 +51,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 1300)
 
 [node name="SpeedHUD" type="CanvasLayer" parent="."]
 script = ExtResource("s_hud")
+
+[node name="WeaponHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_whud")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("env")
