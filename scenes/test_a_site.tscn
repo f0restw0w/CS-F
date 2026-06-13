@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/hdri/syferfontein_1d_clear_2k.hdr" id="t_hdri"]
+[ext_resource type="PackedScene" path="res://scenes/regions/a_site_v3.tscn" id="r_a"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="p_player"]
+[ext_resource type="Script" path="res://scripts/debug/speed_hud.gd" id="s_hud"]
+[ext_resource type="Script" path="res://scripts/debug/weapon_hud.gd" id="s_whud"]
+[ext_resource type="Script" path="res://scripts/debug/demo_overlay.gd" id="s_overlay"]
+
+[sub_resource type="PanoramaSkyMaterial" id="sky_mat"]
+panorama = ExtResource("t_hdri")
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+tonemap_mode = 3
+ssao_enabled = true
+sdfgi_enabled = true
+sdfgi_cascades = 6
+sdfgi_min_cell_size = 6.0
+glow_enabled = true
+glow_intensity = 0.4
+
+[node name="TestASite" type="Node3D"]
+editor_description = "A 区 demo 实测验证场景。F6 运行：走墙/楼梯/箱子核对是否贴合记忆。彩色点云=负责人实际 demo 轨迹（蓝低红高），灰盒应贴着点云。出生在长A进场口朝北看 site。"
+
+[node name="ASite" parent="." instance=ExtResource("r_a")]
+
+[node name="DemoOverlay" type="Node3D" parent="."]
+script = ExtResource("s_overlay")
+
+[node name="Player" parent="." instance=ExtResource("p_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1312, 4, -1900)
+
+[node name="SpeedHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_hud")
+
+[node name="WeaponHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_whud")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.819152, -0.439693, 0.369145, 0, 0.642788, 0.766044, -0.573576, -0.627426, 0.526558, 0, 2000, 0)
+light_color = Color(1, 0.95, 0.85, 1)
+light_energy = 1.2
+shadow_enabled = true
+directional_shadow_max_distance = 6000.0

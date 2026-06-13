@@ -1,0 +1,131 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Material" path="res://resources/materials/mat_floor.tres" id="m_floor"]
+[ext_resource type="Material" path="res://resources/materials/mat_wall.tres" id="m_wall"]
+[ext_resource type="Material" path="res://resources/materials/mat_crate.tres" id="m_crate"]
+
+[node name="ASiteV3" type="Node3D"]
+editor_description = "A 区 v3——直接由负责人 amap.dem 实测轨迹重刻（GoldSrc 原生坐标）。坐标映射：Godot.x=gs.x，Godot.y(上)=脚高(gs.z-36)，Godot.z=-gs.y。所有高度/边界来自 demo_heightmap 网格实测，非估算。site 地面 96 / 后平台 128 / 跳箱顶 160 / 东坡 30→143 / 长A进场 0 / 坑 -24 / 北墙 y2880 / 东墙 x1792 / 西墙 x865。"
+
+[node name="SiteFloor_96" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1072, 88, -2520)
+use_collision = true
+size = Vector3(400, 16, 460)
+material = ExtResource("m_floor")
+
+[node name="Plat_North_128" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1148, 120, -2800)
+use_collision = true
+size = Vector3(312, 16, 130)
+material = ExtResource("m_floor")
+
+[node name="Plat_Spine_128" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1256, 120, -2520)
+use_collision = true
+size = Vector3(80, 16, 470)
+material = ExtResource("m_floor")
+
+[node name="Plat_BackWest_128" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1108, 120, -2346)
+use_collision = true
+size = Vector3(232, 16, 100)
+material = ExtResource("m_floor")
+
+[node name="LongApproach_0" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1312, -8, -1950)
+use_collision = true
+size = Vector3(112, 16, 300)
+material = ExtResource("m_floor")
+
+[node name="LongApproach_Wide_0" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1248, -8, -2078)
+use_collision = true
+size = Vector3(240, 16, 60)
+material = ExtResource("m_floor")
+
+[node name="TransitionRamp_0to96" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.901, -0.433, 0, 0.433, 0.901, 1312, 48, -2200)
+use_collision = true
+size = Vector3(112, 16, 222)
+material = ExtResource("m_floor")
+
+[node name="EastRamp_30to143" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.973, -0.229, 0, 0.229, 0.973, 1552, 86, -2584)
+use_collision = true
+size = Vector3(72, 16, 493)
+material = ExtResource("m_floor")
+
+[node name="East_Ledge_60" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1744, 52, -2040)
+use_collision = true
+size = Vector3(72, 16, 480)
+material = ExtResource("m_floor")
+
+[node name="East_Ledge_Ramp_0to60" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.936, -0.351, 0, 0.351, 0.936, 1672, 30, -2256)
+use_collision = true
+size = Vector3(72, 16, 171)
+material = ExtResource("m_floor")
+
+[node name="Pit_Floor_neg24" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 976, -32, -2216)
+use_collision = true
+size = Vector3(200, 16, 360)
+material = ExtResource("m_floor")
+
+[node name="Pit_Ramp_to96" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.857, -0.515, 0, 0.515, 0.857, 1010, 36, -2430)
+use_collision = true
+size = Vector3(160, 16, 140)
+material = ExtResource("m_floor")
+
+[node name="JumpBox_64_top160" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1112, 128, -2424)
+use_collision = true
+size = Vector3(112, 64, 64)
+material = ExtResource("m_crate")
+
+[node name="Box_mid_top128" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1040, 112, -2600)
+use_collision = true
+size = Vector3(64, 32, 64)
+material = ExtResource("m_crate")
+
+[node name="Box_default_top128" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1170, 112, -2630)
+use_collision = true
+size = Vector3(64, 32, 80)
+material = ExtResource("m_crate")
+
+[node name="Wall_North_y2880" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1180, 200, -2880)
+use_collision = true
+size = Vector3(640, 256, 16)
+material = ExtResource("m_wall")
+
+[node name="Wall_West_x864" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 864, 160, -2520)
+use_collision = true
+size = Vector3(16, 384, 740)
+material = ExtResource("m_wall")
+
+[node name="Wall_East_x1792" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1792, 160, -2200)
+use_collision = true
+size = Vector3(16, 320, 1200)
+material = ExtResource("m_wall")
+
+[node name="Wall_PitWest_x864" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 864, 40, -2216)
+use_collision = true
+size = Vector3(16, 160, 360)
+material = ExtResource("m_wall")
+
+[node name="Marker_site中心" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1072, 98, -2520)
+
+[node name="Marker_长A进场" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1312, 4, -1850)
+
+[node name="Marker_跳箱顶160" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1112, 162, -2424)
