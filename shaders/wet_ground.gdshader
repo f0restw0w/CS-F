@@ -1,4 +1,5 @@
 shader_type spatial;
+render_mode cull_disabled;  // bsp 网格三角绕序不一，必须双面，否则地面"透明"看到背景
 // 湿地面：淋湿变暗 + 积水(噪声遮罩)镜面反射(配合环境 SSR) + 动态涟漪。
 // 配 wetness 0..1 随暴雨淡入淡出。只作用于朝上面（地面/平台），墙保持原样。
 
