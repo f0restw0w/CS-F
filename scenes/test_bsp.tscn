@@ -17,13 +17,17 @@ sky_material = SubResource("sky_mat")
 background_mode = 2
 sky = SubResource("sky")
 ambient_light_source = 3
+ambient_light_energy = 0.6
 tonemap_mode = 3
+tonemap_exposure = 0.72
+tonemap_white = 6.0
 ssao_enabled = true
 sdfgi_enabled = true
 sdfgi_cascades = 6
 sdfgi_min_cell_size = 8.0
 glow_enabled = true
-glow_intensity = 0.35
+glow_intensity = 0.25
+glow_hdr_threshold = 1.2
 
 [node name="TestBSP" type="Node3D"]
 editor_description = "de_dust2 精确几何（净室提取自 bsp）+ 玩家 + demo 点云对照。F6 运行。彩色点=你 demo 实际走过的轨迹，应当完全贴合灰盒（同一 GoldSrc 坐标系）。出生在 A 点。"
@@ -48,6 +52,6 @@ environment = SubResource("env")
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.819152, -0.439693, 0.369145, 0, 0.642788, 0.766044, -0.573576, -0.627426, 0.526558, 0, 2000, 0)
 light_color = Color(1, 0.95, 0.85, 1)
-light_energy = 1.2
+light_energy = 0.85
 shadow_enabled = true
 directional_shadow_max_distance = 8000.0

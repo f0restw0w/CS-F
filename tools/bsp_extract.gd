@@ -99,7 +99,11 @@ func _init() -> void:
 	var nrm_floor := PackedVector3Array()
 	var nrm_wall := PackedVector3Array()
 	var nrm_ramp := PackedVector3Array()
+	var uv_floor := PackedVector2Array()
+	var uv_wall := PackedVector2Array()
+	var uv_ramp := PackedVector2Array()
 	var all_tris := PackedVector3Array()  # 碰撞（不分类）
+	const UV_SCALE := 1.0 / 128.0  # 纹理每 128 单位重复一次
 
 	var fo: int = _lumps[LUMP_FACES][0]
 	var skipped := 0
@@ -145,15 +149,19 @@ func _init() -> void:
 
 			var target_t: PackedVector3Array
 			var target_n: PackedVector3Array
+			var target_uv: PackedVector2Array
 			if godot_n.y > 0.7:
 				target_t = tri_floor
 				target_n = nrm_floor
+				target_uv = uv_floor
 			elif absf(godot_n.y) < 0.3:
 				target_t = tri_wall
 				target_n = nrm_wall
+				target_uv = uv_wall
 			else:
 				target_t = tri_ramp
 				target_n = nrm_ramp
+				target_uv = uv_ramp
 
 			var g0 := _to_godot(poly[0])
 			for i in range(1, poly.size() - 1):
@@ -162,6 +170,7 @@ func _init() -> void:
 				for v in [g0, g2, g1]:  # 反绕匹配 y→-z 镜像
 					target_t.append(v)
 					target_n.append(godot_n)
+					target_uv.append(_planar_uv(v, godot_n, UV_SCALE))
 					all_tris.append(v)
 					mn = mn.min(v)
 					mx = mx.max(v)
@@ -173,9 +182,9 @@ func _init() -> void:
 
 	# 组装 ArrayMesh（3 surface，灰盒材质）
 	var mesh := ArrayMesh.new()
-	_add_surface(mesh, tri_floor, nrm_floor, "res://resources/materials/mat_floor.tres")
-	_add_surface(mesh, tri_wall, nrm_wall, "res://resources/materials/mat_wall.tres")
-	_add_surface(mesh, tri_ramp, nrm_ramp, "res://resources/materials/mat_raised.tres")
+	_add_surface(mesh, tri_floor, nrm_floor, uv_floor, "res://resources/materials/mat_floor.tres")
+	_add_surface(mesh, tri_wall, nrm_wall, uv_wall, "res://resources/materials/mat_wall.tres")
+	_add_surface(mesh, tri_ramp, nrm_ramp, uv_ramp, "res://resources/materials/mat_raised.tres")
 
 	DirAccess.make_dir_recursive_absolute("res://assets/dust2")
 	var mesh_path := "res://assets/dust2/world_geo.mesh"
@@ -310,14 +319,33 @@ func _read_texinfo_miptex() -> PackedInt32Array:
 	return out
 
 
-func _add_surface(mesh: ArrayMesh, tris: PackedVector3Array, nrms: PackedVector3Array, mat_path: String) -> void:
+## 按面法线做平面 UV 投影（GoldSrc 给墙贴图的方式）：取法线最弱的两个轴当 UV 平面。
+func _planar_uv(v: Vector3, n: Vector3, scale: float) -> Vector2:
+	var ax := absf(n.x)
+	var ay := absf(n.y)
+	var az := absf(n.z)
+	if ay >= ax and ay >= az:
+		return Vector2(v.x, v.z) * scale       # 地面/天花：投 XZ
+	elif ax >= az:
+		return Vector2(v.z, v.y) * scale       # X 向墙：投 ZY
+	return Vector2(v.x, v.y) * scale           # Z 向墙：投 XY
+
+
+func _add_surface(mesh: ArrayMesh, tris: PackedVector3Array, nrms: PackedVector3Array,
+		uvs: PackedVector2Array, mat_path: String) -> void:
 	if tris.is_empty():
 		return
 	var arr := []
 	arr.resize(Mesh.ARRAY_MAX)
 	arr[Mesh.ARRAY_VERTEX] = tris
 	arr[Mesh.ARRAY_NORMAL] = nrms
+	arr[Mesh.ARRAY_TEX_UV] = uvs
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
-	var mat := load(mat_path)
+	var mat = load(mat_path)
 	if mat:
-		mesh.surface_set_material(mesh.get_surface_count() - 1, mat)
+		# 用我们自己生成的 UV（不靠 triplanar），并双面渲染（brush 绕序不一）。
+		var dup: StandardMaterial3D = mat.duplicate()
+		dup.cull_mode = BaseMaterial3D.CULL_DISABLED
+		dup.uv1_triplanar = false
+		dup.uv1_scale = Vector3.ONE
+		mesh.surface_set_material(mesh.get_surface_count() - 1, dup)
