@@ -27,9 +27,10 @@ const HISTORY_MAX := 256
 
 @export var players_container: NodePath = ^"../Players"
 ## 出生点轮转（T 家 + CT 家混排，死斗式）
+# 真实 bsp 坐标：T 家（北, gs y~3050, 脚高 128）/ CT 家（南, gs y~-1008, 脚高 ~150）
 @export var spawn_points: Array[Vector3] = [
-	Vector3(-650, 162, 650), Vector3(-800, 162, 750), Vector3(-500, 162, 750),
-	Vector3(450, 66, -2300), Vector3(300, 66, -2400), Vector3(600, 66, -2400),
+	Vector3(1200, 132, -3050), Vector3(1100, 132, -3000), Vector3(1300, 132, -3000),
+	Vector3(-500, 152, 1008), Vector3(-650, 152, 1008), Vector3(-785, 158, 1008),
 ]
 
 var is_server := false

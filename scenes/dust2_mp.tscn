@@ -1,15 +1,37 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=9 format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/dust2_map.tscn" id="m_map"]
+[ext_resource type="Texture2D" path="res://assets/hdri/syferfontein_1d_clear_2k.hdr" id="t_hdri"]
+[ext_resource type="PackedScene" path="res://scenes/regions/dust2_world.tscn" id="m_world"]
 [ext_resource type="Script" path="res://scripts/net/network_manager.gd" id="s_net"]
 [ext_resource type="Script" path="res://scripts/net/lobby_ui.gd" id="s_lobby"]
 [ext_resource type="Script" path="res://scripts/debug/speed_hud.gd" id="s_hud"]
 [ext_resource type="Script" path="res://scripts/debug/weapon_hud.gd" id="s_whud"]
 
-[node name="Dust2MP" type="Node3D"]
-editor_description = "联机灰盒 dust2：服务器权威 + 客户端预测回滚。运行后点 主机/加入；专服: godot --headless res://scenes/dust2_mp.tscn -- --server [端口]；自动连接: -- --connect ip[:端口]"
+[sub_resource type="PanoramaSkyMaterial" id="sky_mat"]
+panorama = ExtResource("t_hdri")
 
-[node name="Map" parent="." instance=ExtResource("m_map")]
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+ambient_light_energy = 0.6
+tonemap_mode = 3
+tonemap_exposure = 0.72
+ssao_enabled = true
+sdfgi_enabled = true
+sdfgi_cascades = 6
+sdfgi_min_cell_size = 8.0
+glow_enabled = true
+glow_intensity = 0.25
+glow_hdr_threshold = 1.2
+
+[node name="Dust2MP" type="Node3D"]
+editor_description = "联机灰盒 dust2（精确 bsp 几何）：服务器权威 + 客户端预测回滚。运行后点 主机/加入；专服: godot --headless res://scenes/dust2_mp.tscn -- --server [端口]。"
+
+[node name="Map" parent="." instance=ExtResource("m_world")]
 
 [node name="Players" type="Node3D" parent="."]
 
@@ -21,6 +43,16 @@ script = ExtResource("s_hud")
 
 [node name="WeaponHUD" type="CanvasLayer" parent="."]
 script = ExtResource("s_whud")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.819152, -0.439693, 0.369145, 0, 0.642788, 0.766044, -0.573576, -0.627426, 0.526558, 0, 2000, 0)
+light_color = Color(1, 0.95, 0.85, 1)
+light_energy = 0.85
+shadow_enabled = true
+directional_shadow_max_distance = 8000.0
 
 [node name="Lobby" type="CanvasLayer" parent="."]
 script = ExtResource("s_lobby")

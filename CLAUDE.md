@@ -10,7 +10,7 @@
 
 ## 当前阶段
 
-**Phase 0 已验收；Phase 1-4 + dust2 几何细化 + 合法美术（CC0）已完成，等负责人一次性验收。** 进度见 `PROGRESS.md`，待复核决策见 `DECISIONS_FOR_REVIEW.md`，外部资产登记见 `ASSET_CREDITS.md`。**待负责人**：手感参数锁定、dust2 几何记忆校准后打 `dust2-geometry-v1` tag。验收通过前不开新功能。
+**里程碑 `dust2-geometry-v1`（2026-06-13）：主地图 `dust2.tscn` 已切换为精确 dust2 几何**——净室提取自 de_dust2.bsp 的 brush 坐标（负责人授权；只读几何，不碰贴图/模型/音效/实体；bsp 不入库）。Phase 0-4 全部功能在位：GoldSrc 移动手感、AK hitscan（原创 AK 模型+原创枪声，非 Valve 资产）、引擎内现代光照（CC0 纹理+HDRI）、服务器权威联机。出生在 T 家真实坐标。手感测试已与地图解耦（`test_flat.tscn`）。进度 `PROGRESS.md`、决策 `DECISIONS_FOR_REVIEW.md`、资产 `ASSET_CREDITS.md`。**待负责人**：手感参数锁定、几何走查微调。旧的估算分区（v2/v3 `dust2_map`/`regions`/`a_site_v3`）已被取代。
 
 ## 绝对原则（NON-NEGOTIABLE）
 

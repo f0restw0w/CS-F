@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Material" path="res://resources/materials/mat_floor.tres" id="m_floor"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="p_player"]
+[ext_resource type="Script" path="res://scripts/debug/speed_hud.gd" id="s_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+
+[node name="TestFlat" type="Node3D"]
+editor_description = "平地移动手感测试场（手感测试与具体地图解耦）：2048×2048 平地，地面 y=0。"
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8, 0)
+use_collision = true
+size = Vector3(2048, 16, 2048)
+material = ExtResource("m_floor")
+
+[node name="Player" parent="." instance=ExtResource("p_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 30, 0)
+
+[node name="SpeedHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_hud")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 2000, 0)
+shadow_enabled = true

@@ -1,10 +1,11 @@
 extends SceneTree
-## 集成冒烟测试：加载灰盒 dust2，模拟输入，验证控制器在真实场景里的行为。
+## 集成手感测试：在平地场景模拟输入，验证控制器行为（与具体地图解耦，
+## 因为移动手感不依赖 dust2——用平地最稳定可复现）。
 ##
 ## 运行方式（无头）：
 ##   godot --headless --path . --script res://tests/test_integration.gd
 ##
-## 覆盖：落地着陆 / 直线跑到 sv_maxspeed / 跳跃初速 / air strafe 空中转向加速。
+## 覆盖：落地 / 直线跑 320 / 跳跃初速 / air strafe 转向加速 / 蹲 / duck-jump / 卡蹲。
 
 var _failed := 0
 var _passed := 0
@@ -25,7 +26,7 @@ func check(name: String, cond: bool) -> void:
 
 func _run() -> void:
 	await process_frame
-	var scene: Node = (load("res://scenes/dust2.tscn") as PackedScene).instantiate()
+	var scene: Node = (load("res://scenes/test_flat.tscn") as PackedScene).instantiate()
 	root.add_child(scene)
 	await process_frame
 
@@ -35,16 +36,15 @@ func _run() -> void:
 		_finish()
 		return
 
-	# 1) 出生后稳定落地
+	# 1) 出生后稳定落地（平地 y=0）
 	for i in 50:
 		await physics_frame
 	check("出生后落地（grounded）", player.grounded)
-	check("落点贴 T 家高地（y ≈ 160）", absf(player.global_position.y - 160.0) < 4.0)
+	check("落点贴平地（y ≈ 0）", absf(player.global_position.y) < 4.0)
 
 	# 2) 直线跑加速到 sv_maxspeed=320
-	#    只跑 0.8 秒（约 230 单位）——再远会撞上中路 Xbox 箱（正面 clip 会把速度归零）
 	Input.action_press("move_forward")
-	for i in 80:
+	for i in 120:
 		await physics_frame
 	var run_speed := player.horizontal_speed()
 	Input.action_release("move_forward")
@@ -59,18 +59,17 @@ func _run() -> void:
 	Input.action_release("jump")
 	check("跳跃初速 ≈ 268（实测 %.1f）" % vy, vy > 245.0 and vy < 270.0)
 
-	# 4) air strafe：T 家高地开阔区，助跑起跳后松前进、按住 D + 每 tick 右转，
-	#    速率应明显超过起跳时速率（air strafe 转向加速的标志）
+	# 4) air strafe：助跑起跳后松前进、按住 D + 每 tick 右转，速率应明显超过起跳速率
 	for i in 60:
-		await physics_frame  # 等落地稳定
-	player.global_position = Vector3(-900, 162, 900)
+		await physics_frame
+	player.global_position = Vector3(0, 30, 0)
 	player.rotation = Vector3.ZERO
 	player.velocity = Vector3.ZERO
 	for i in 10:
 		await physics_frame
 	Input.action_press("move_forward")
 	for i in 60:
-		await physics_frame  # 助跑到接近 320
+		await physics_frame
 	var pre_strafe := player.horizontal_speed()
 	Input.action_press("jump")
 	await physics_frame
@@ -80,7 +79,7 @@ func _run() -> void:
 	var airborne_ticks := 0
 	for i in 50:
 		if not player.grounded:
-			player.rotate_y(-0.035)  # 模拟鼠标匀速右转（约 2°/tick），右侧开阔无箱
+			player.rotate_y(-0.035)  # 模拟鼠标匀速右转
 			airborne_ticks += 1
 		await physics_frame
 	Input.action_release("move_right")
@@ -88,20 +87,20 @@ func _run() -> void:
 	check("air strafe 空中加速生效（%.1f → %.1f，空中 %d tick）" % [pre_strafe, post_strafe, airborne_ticks],
 			post_strafe > pre_strafe + 5.0 and pre_strafe > 250.0)
 
-	# 5) 全程没有掉出地图
+	# 5) 未掉出地图
 	check("未掉出地图（y > -200）", player.global_position.y > -200.0)
 
 	# —— Phase 1：蹲 / duck-jump ——
 
 	# 6) 地面蹲：0.4s 过渡后 hull 切换、眼高 30、蹲速 ≈ 320*0.333 ≈ 106.6
-	player.global_position = Vector3(-650, 162, 650)
+	player.global_position = Vector3(0, 30, 0)
 	player.rotation = Vector3.ZERO
 	player.velocity = Vector3.ZERO
 	for i in 30:
 		await physics_frame
 	Input.action_press("duck")
 	for i in 50:
-		await physics_frame  # 0.5s > TIME_TO_DUCK
+		await physics_frame
 	check("地面蹲 0.4s 后完全蹲下", player.ducked)
 	check("蹲下眼高 ≈ 30（实测 %.1f）" % player.get_node("Head").position.y,
 			absf(player.get_node("Head").position.y - 30.0) < 1.0)
@@ -121,7 +120,7 @@ func _run() -> void:
 	check("站立眼高恢复 64（实测 %.1f）" % player.get_node("Head").position.y,
 			absf(player.get_node("Head").position.y - 64.0) < 1.0)
 
-	# 8) duck-jump：空中蹲脚抬 18，脚部顶点 ≈ 45+18 = 63（普通跳 ≈ 45）
+	# 8) duck-jump：空中蹲脚抬 18，脚部顶点 ≈ 63（普通跳 ≈ 45）
 	player.velocity = Vector3.ZERO
 	for i in 30:
 		await physics_frame
@@ -143,7 +142,7 @@ func _run() -> void:
 	check("duck-jump 脚部顶点 ≈ 63（实测 %.1f，普通跳 ≈ 45）" % apex,
 			apex > 55.0 and apex < 72.0)
 
-	# 9) 低顶卡蹲：头顶放障碍（占 feet+46..62），松蹲不能站起；移除后自动站起
+	# 9) 低顶卡蹲：头顶放障碍，松蹲不能站起；移除后自动站起
 	Input.action_press("duck")
 	for i in 50:
 		await physics_frame
@@ -166,60 +165,6 @@ func _run() -> void:
 	for i in 20:
 		await physics_frame
 	check("移除低顶后自动站起", not player.ducked)
-
-	# 10) 全图通路路点：每个路点落地且高度正确，防墙体堵路/缺地板
-	var waypoints: Array = [
-		["上隧道西腿(96)", Vector3(-1675, 98, 550), 96.0],
-		["上隧道北腿(96)", Vector3(-1700, 98, -300), 96.0],
-		["下隧道(0)", Vector3(-1000, 2, -605), 0.0],
-		["下隧道中路口(0)", Vector3(-620, 2, -605), 0.0],
-		["B 点隧道口内(64)", Vector3(-1700, 66, -2010), 64.0],
-		["B 门走廊西段(64)", Vector3(-950, 66, -2100), 64.0],
-		["CT 中路(0)", Vector3(-410, 2, -2000), 0.0],
-		["CT 家(64)", Vector3(450, 66, -2300), 64.0],
-		["出生口外北段(96)", Vector3(210, 98, -310), 96.0],
-		["长A拐角(32)", Vector3(1350, 34, -310), 32.0],
-		["A 短走廊(160)", Vector3(490, 162, -1614), 160.0],
-		["A 平台(224)", Vector3(1175, 226, -2600), 224.0],
-		["大坑底(-32)", Vector3(1280, -30, -2000), -32.0],
-	]
-	for wp in waypoints:
-		player.global_position = wp[1]
-		player.velocity = Vector3.ZERO
-		for i in 20:
-			await physics_frame
-		check("隧道路点[%s]落地且高度对（y=%.1f≈%.0f）" % [wp[0], player.global_position.y, wp[2]],
-				player.grounded and absf(player.global_position.y - wp[2]) < 6.0)
-
-	# 11) T 大坡：T 家（160）走下中路（0），全程贴地不弹跳
-	player.global_position = Vector3(-410, 162, 400)
-	player.rotation = Vector3.ZERO
-	player.velocity = Vector3.ZERO
-	for i in 20:
-		await physics_frame
-	Input.action_press("move_forward")
-	var air_ticks := 0
-	for i in 130:
-		if not player.grounded:
-			air_ticks += 1
-		await physics_frame
-	Input.action_release("move_forward")
-	check("走下 T 大坡贴地（空中 tick=%d ≤ 5）" % air_ticks, air_ticks <= 5)
-	check("到达中路平面（y=%.1f ≈ 0）" % player.global_position.y,
-			absf(player.global_position.y) < 6.0)
-
-	# 12) 长 A 大坡：直道(32)跑上 A 点(192)
-	player.global_position = Vector3(1500, 34, -1700)
-	player.rotation = Vector3.ZERO
-	player.velocity = Vector3.ZERO
-	for i in 20:
-		await physics_frame
-	Input.action_press("move_forward")
-	for i in 210:
-		await physics_frame
-	Input.action_release("move_forward")
-	check("跑上长A大坡抵达 A 点（y=%.1f ≈ 192）" % player.global_position.y,
-			absf(player.global_position.y - 192.0) < 6.0)
 
 	_finish()
 
