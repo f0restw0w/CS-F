@@ -212,8 +212,9 @@ func _apply_storm_mood() -> void:
 	_env = we.environment
 	_orig_exposure = _env.tonemap_exposure
 	_orig_ambient = _env.ambient_light_energy
-	_env.tonemap_exposure = _orig_exposure * 0.45
-	_env.ambient_light_energy = _orig_ambient * 0.5
+	# 阴天而非黑夜：保证看得清地面/敌人，闪电仍有戏剧性
+	_env.tonemap_exposure = _orig_exposure * 0.78
+	_env.ambient_light_energy = _orig_ambient * 0.85
 
 
 func _find_world_env() -> WorldEnvironment:

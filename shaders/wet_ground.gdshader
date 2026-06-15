@@ -48,13 +48,13 @@ void fragment() {
 	float n = fbm(w_pos.xz * puddle_scale);
 	float puddle = smoothstep(0.5, 0.62, n) * up_hard * wetness;
 
-	// 非积水处的湿润光泽：变暗 + 略微光滑
+	// 非积水处的湿润光泽：只略微变暗（保证看得清地面）+ 更光滑反光
 	float sheen = wetness * up;
-	vec3 wet_alb = base * mix(1.0, 0.6, sheen);
-	ALBEDO = mix(wet_alb, base * 0.16, puddle);
+	vec3 wet_alb = base * mix(1.0, 0.85, sheen);
+	ALBEDO = mix(wet_alb, base * 0.5, puddle);  // 积水也别全黑
 
-	float rough = mix(0.95, 0.5, sheen);
-	rough = mix(rough, 0.04, puddle);  // 积水=近镜面 → SSR 反射场景
+	float rough = mix(0.95, 0.45, sheen);
+	rough = mix(rough, 0.05, puddle);  // 积水=近镜面 → SSR 反射场景
 	ROUGHNESS = rough;
 	SPECULAR = mix(0.5, 0.95, puddle);
 
