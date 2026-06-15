@@ -28,6 +28,17 @@ ambientCG 全站素材为 CC0（Creative Commons Zero）：可商用、可修改
 | 占位枪声 | 代码运行时生成（白噪声+低频衰减，`hitscan_weapon.gd::_make_shot_sound`），无外部来源 |
 | 灰盒几何/程序噪声材质 | Godot 原生几何与 FastNoiseLite，无外部来源 |
 
+## 几何（净室提取，非美术资产）
+
+| 产物 | 说明 | 来源 | 性质 |
+|------|------|------|------|
+| assets/dust2/world_geo.mesh | dust2 世界灰盒网格 | 从 de_dust2.bsp **仅提取 brush 几何坐标**（负责人 2026-06-13 授权） | 几何布局=事实，不受版权保护；不含任何贴图/模型/音效/实体 |
+| assets/dust2/world_col.res | dust2 碰撞 trimesh | 同上 | 同上 |
+
+- 源 `de_dust2.bsp` 本身**不在仓库**（.gitignore 拦截 *.bsp/*.dem/*.wad/*.spr）。
+- 提取器 `tools/bsp_extract.gd` 只读顶点/边/面/平面坐标；纹理仅读名字做过滤，不碰像素。
+- 这是 dust2 **几何布局**的净室重建（与 CS2 重制思路一致）；视觉仍用我们自己的 CC0 灰盒材质。
+
 ## 自检声明
 
 - 本项目**不含**任何 Valve 资产（无 .bsp/贴图/模型/音效的提取、转换或临摹）。
