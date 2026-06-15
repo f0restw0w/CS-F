@@ -4,11 +4,11 @@ extends Node3D
 ## 坐标映射 GoldSrc→Godot：x=x, y(up)=z-36(脚高)+2, z=-y。只取 A 区范围。
 
 @export var csv_path := "res://.godot/demo_trace.csv"
-@export var x0 := 820.0
-@export var x1 := 1860.0
-@export var y0 := 1780.0
-@export var y1 := 2900.0
-@export var stride := 6  # 每 N 个样本画一个，控制密度
+@export var x0 := -2600.0
+@export var x1 := 1950.0
+@export var y0 := -1100.0
+@export var y1 := 3100.0
+@export var stride := 4  # 每 N 个样本画一个，控制密度
 
 
 func _ready() -> void:

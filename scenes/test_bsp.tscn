@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/hdri/syferfontein_1d_clear_2k.hdr" id="t_hdri"]
+[ext_resource type="PackedScene" path="res://scenes/regions/dust2_world.tscn" id="r_world"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="p_player"]
+[ext_resource type="Script" path="res://scripts/debug/speed_hud.gd" id="s_hud"]
+[ext_resource type="Script" path="res://scripts/debug/weapon_hud.gd" id="s_whud"]
+[ext_resource type="Script" path="res://scripts/debug/demo_overlay.gd" id="s_overlay"]
+
+[sub_resource type="PanoramaSkyMaterial" id="sky_mat"]
+panorama = ExtResource("t_hdri")
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+tonemap_mode = 3
+ssao_enabled = true
+sdfgi_enabled = true
+sdfgi_cascades = 6
+sdfgi_min_cell_size = 8.0
+glow_enabled = true
+glow_intensity = 0.35
+
+[node name="TestBSP" type="Node3D"]
+editor_description = "de_dust2 精确几何（净室提取自 bsp）+ 玩家 + demo 点云对照。F6 运行。彩色点=你 demo 实际走过的轨迹，应当完全贴合灰盒（同一 GoldSrc 坐标系）。出生在 A 点。"
+
+[node name="World" parent="." instance=ExtResource("r_world")]
+
+[node name="DemoOverlay" type="Node3D" parent="."]
+script = ExtResource("s_overlay")
+
+[node name="Player" parent="." instance=ExtResource("p_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1072, 140, -2520)
+
+[node name="SpeedHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_hud")
+
+[node name="WeaponHUD" type="CanvasLayer" parent="."]
+script = ExtResource("s_whud")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.819152, -0.439693, 0.369145, 0, 0.642788, 0.766044, -0.573576, -0.627426, 0.526558, 0, 2000, 0)
+light_color = Color(1, 0.95, 0.85, 1)
+light_energy = 1.2
+shadow_enabled = true
+directional_shadow_max_distance = 8000.0

@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="ArrayMesh" path="res://assets/dust2/world_geo.mesh" id="1_mesh"]
+[ext_resource type="Shape3D" path="res://assets/dust2/world_col.res" id="2_col"]
+
+[node name="Dust2World" type="StaticBody3D"]
+editor_description = "de_dust2 世界几何——净室提取自 de_dust2.bsp 的 brush 坐标（仅几何，无贴图/模型/实体/音效）。GoldSrc 原生坐标 1:1（Godot.x=gs.x, y=gs.z, z=-gs.y）。碰撞=精确 trimesh，可视=按法线分灰盒材质。"
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = ExtResource("2_col")

@@ -20,3 +20,11 @@ Thumbs.db
 *.swp
 .vscode/
 .idea/
+
+# 版权红线：绝不入库任何 Valve 原始资产。
+# 我们只把「净室提取的几何坐标」（assets/dust2/*.mesh, *.res）入库，
+# 源 .bsp / demo 本身永不进仓库。
+*.bsp
+*.dem
+*.wad
+*.spr
