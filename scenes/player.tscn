@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_pc"]
 [ext_resource type="Script" path="res://scripts/player/camera_controller.gd" id="2_cam"]
@@ -9,16 +9,51 @@
 [sub_resource type="BoxShape3D" id="hull"]
 size = Vector3(32, 72, 32)
 
-[sub_resource type="StandardMaterial3D" id="gun_mat"]
-albedo_color = Color(0.15, 0.15, 0.17, 1)
+[sub_resource type="StandardMaterial3D" id="mat_metal"]
+albedo_color = Color(0.1, 0.1, 0.11, 1)
+metallic = 0.8
+roughness = 0.4
 
-[sub_resource type="BoxMesh" id="gun_mesh"]
-size = Vector3(3, 3.5, 18)
-material = SubResource("gun_mat")
+[sub_resource type="StandardMaterial3D" id="mat_wood"]
+albedo_color = Color(0.42, 0.24, 0.1, 1)
+roughness = 0.7
 
-[sub_resource type="BoxMesh" id="gun_grip"]
-size = Vector3(2.4, 5, 3)
-material = SubResource("gun_mat")
+[sub_resource type="BoxMesh" id="m_receiver"]
+size = Vector3(2.6, 4.2, 14)
+material = SubResource("mat_metal")
+
+[sub_resource type="BoxMesh" id="m_barrel"]
+size = Vector3(1.2, 1.2, 16)
+material = SubResource("mat_metal")
+
+[sub_resource type="CylinderMesh" id="m_gasblock"]
+top_radius = 1.1
+bottom_radius = 1.1
+height = 7.0
+
+[sub_resource type="BoxMesh" id="m_handguard"]
+size = Vector3(2.2, 2.6, 9)
+material = SubResource("mat_wood")
+
+[sub_resource type="BoxMesh" id="m_mag_top"]
+size = Vector3(1.8, 4.5, 4)
+material = SubResource("mat_metal")
+
+[sub_resource type="BoxMesh" id="m_mag_bot"]
+size = Vector3(1.8, 4.5, 4)
+material = SubResource("mat_metal")
+
+[sub_resource type="BoxMesh" id="m_grip"]
+size = Vector3(1.8, 5, 2.6)
+material = SubResource("mat_wood")
+
+[sub_resource type="BoxMesh" id="m_stock"]
+size = Vector3(2, 3.4, 11)
+material = SubResource("mat_wood")
+
+[sub_resource type="BoxMesh" id="m_sight"]
+size = Vector3(0.6, 1.6, 0.8)
+material = SubResource("mat_metal")
 
 [node name="Player" type="CharacterBody3D"]
 safe_margin = 0.05
@@ -42,13 +77,44 @@ far = 16000.0
 script = ExtResource("4_wpn")
 params = ExtResource("5_ak")
 
-[node name="GunModel" type="MeshInstance3D" parent="Head/Camera3D/Weapon"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, -6, -16)
-mesh = SubResource("gun_mesh")
+[node name="AK" type="Node3D" parent="Head/Camera3D/Weapon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, -6, -6)
 
-[node name="GunGrip" type="MeshInstance3D" parent="Head/Camera3D/Weapon"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, -8.5, -10)
-mesh = SubResource("gun_grip")
+[node name="Receiver" type="MeshInstance3D" parent="Head/Camera3D/Weapon/AK"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
+mesh = SubResource("m_receiver")
+
+[node name="Barrel" type="MeshInstance3D" parent="Head/Camera3D/Weapon/AK"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -22)
+mesh = SubResource("m_barrel")
+
+[node name="GasBlock" type="MeshInstance3D" parent="Head/Camera3D/Weapon/AK"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 1.6, -17)
+mesh = SubResource("m_gasblock")
+
+[node name="Handguard" type="MeshInstance3D" parent="Head/Camera3D/Weapon/AK"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, -19)
+mesh = SubResource("m_handguard")
+
+[node name="MagTop" type="MeshInstance3D" parent="Head/Camera3D/Weapon/AK"]
+transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, 0, -3.6, -11)
+mesh = SubResource("m_mag_top")
+
+[node name="MagBot" type="MeshInstance3D" parent="Head/Camera3D/Weapon/AK"]
+transform = Transform3D(1, 0, 0, 0, 0.866, 0.5, 0, -0.5, 0.866, 0, -7.4, -9.2)
+mesh = SubResource("m_mag_bot")
+
+[node name="Grip" type="MeshInstance3D" parent="Head/Camera3D/Weapon/AK"]
+transform = Transform3D(1, 0, 0, 0, 0.94, 0.342, 0, -0.342, 0.94, 0, -4, -3)
+mesh = SubResource("m_grip")
+
+[node name="Stock" type="MeshInstance3D" parent="Head/Camera3D/Weapon/AK"]
+transform = Transform3D(1, 0, 0, 0, 0.985, -0.174, 0, 0.174, 0.985, 0, -1.4, 4)
+mesh = SubResource("m_stock")
+
+[node name="Sight" type="MeshInstance3D" parent="Head/Camera3D/Weapon/AK"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, -2)
+mesh = SubResource("m_sight")
 
 [node name="Muzzle" type="Marker3D" parent="Head/Camera3D/Weapon"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, -5.2, -25.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, -5, -31)

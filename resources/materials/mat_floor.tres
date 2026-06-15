@@ -6,11 +6,12 @@
 
 [resource]
 resource_name = "mat_floor"
-albedo_color = Color(1, 0.95, 0.82, 1)
+albedo_color = Color(1.7, 1.55, 1.2, 1)
 albedo_texture = ExtResource("t_color")
 roughness_texture = ExtResource("t_rough")
+roughness = 1.0
 normal_enabled = true
 normal_texture = ExtResource("t_normal")
-normal_scale = 0.5
+normal_scale = 0.35
 uv1_triplanar = true
 uv1_scale = Vector3(0.0052, 0.0052, 0.0052)

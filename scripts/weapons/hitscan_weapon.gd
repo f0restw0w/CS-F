@@ -201,22 +201,37 @@ func _spawn_impact(pos: Vector3, normal: Vector3) -> void:
 	get_tree().create_timer(4.0).timeout.connect(mi.queue_free)
 
 
-## 程序生成占位枪声（白噪声爆发 + 指数衰减），不引入任何外部音频资产
+## 程序生成的 AK 风格枪声——纯原创合成（零外部音频资产，无版权问题）。
+## 分层：极短爆裂瞬态(crack) + 中频枪膛"body" + 低频"砰" + 噪声尾音。
 func _make_shot_sound() -> AudioStreamWAV:
-	var rate := 22050
-	var dur := 0.09
+	var rate := 44100
+	var dur := 0.22
 	var n := int(rate * dur)
 	var data := PackedByteArray()
 	data.resize(n * 2)
 	var rng := RandomNumberGenerator.new()
-	rng.seed = 1337
+	rng.seed = 4747
+	# 简单一阶低通状态（给尾音去毛刺）
+	var lp := 0.0
 	for i in n:
 		var t := float(i) / rate
-		var env := exp(-t * 55.0)
-		var s := (rng.randf() * 2.0 - 1.0) * 0.85 * env
-		s += sin(t * TAU * 140.0) * 0.35 * exp(-t * 30.0)  # 低频"砰"
-		var v := int(clampf(s, -1.0, 1.0) * 32767.0)
-		data.encode_s16(i * 2, v)
+		var white := rng.randf() * 2.0 - 1.0
+		# 1) 开火瞬态 crack：极快衰减的宽带噪声 + 高频啸叫
+		var crack := white * exp(-t * 600.0) * 1.0
+		crack += sin(t * TAU * 2400.0) * exp(-t * 500.0) * 0.5
+		# 2) 枪膛 body：中频，稍慢衰减，给"厚度"
+		var body := sin(t * TAU * 320.0) * exp(-t * 60.0) * 0.6
+		body += sin(t * TAU * 180.0) * exp(-t * 45.0) * 0.5
+		# 3) 低频砰：枪口冲击
+		var boom := sin(t * TAU * 85.0) * exp(-t * 28.0) * 0.7
+		# 4) 噪声尾音（回响感），低通过滤
+		var tail_noise := white * exp(-t * 14.0) * 0.35
+		lp += (tail_noise - lp) * 0.25
+		var s := crack + body + boom + lp
+		# 软削波，避免爆音
+		s = clampf(s, -1.0, 1.0)
+		s = s - (s * s * s) / 3.0  # 柔和饱和
+		data.encode_s16(i * 2, int(clampf(s, -1.0, 1.0) * 30000.0))
 	var wav := AudioStreamWAV.new()
 	wav.format = AudioStreamWAV.FORMAT_16_BITS
 	wav.mix_rate = rate

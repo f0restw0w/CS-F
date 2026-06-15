@@ -71,6 +71,7 @@ func _init() -> void:
 	var ents := _read_entities()
 	var model_origin := {}   # 模型号 N → 世界偏移
 	var model_skip := {}     # 模型号 N → 跳过（非固体）
+	var model_crate := {}    # 模型号 N → 木箱（func_breakable/pushable，贴木纹）
 	for ent in ents:
 		var m: String = ent.get("model", "")
 		if not m.begins_with("*"):
@@ -87,6 +88,8 @@ func _init() -> void:
 			if cn.find(bad) != -1:
 				model_skip[idx] = true
 				break
+		if cn.find("breakable") != -1 or cn.find("pushable") != -1:
+			model_crate[idx] = true
 
 	var models := _read_models()
 	print("brush 模型=%d  其中实体偏移=%d  跳过(门/触发/装饰)=%d" %
@@ -102,8 +105,12 @@ func _init() -> void:
 	var uv_floor := PackedVector2Array()
 	var uv_wall := PackedVector2Array()
 	var uv_ramp := PackedVector2Array()
+	var tri_crate := PackedVector3Array()
+	var nrm_crate := PackedVector3Array()
+	var uv_crate := PackedVector2Array()
 	var all_tris := PackedVector3Array()  # 碰撞（不分类）
 	const UV_SCALE := 1.0 / 128.0  # 纹理每 128 单位重复一次
+	const UV_SCALE_CRATE := 1.0 / 64.0  # 木箱纹理更密
 
 	var fo: int = _lumps[LUMP_FACES][0]
 	var skipped := 0
@@ -150,7 +157,13 @@ func _init() -> void:
 			var target_t: PackedVector3Array
 			var target_n: PackedVector3Array
 			var target_uv: PackedVector2Array
-			if godot_n.y > 0.7:
+			var uvs := UV_SCALE
+			if model_crate.has(mi):
+				target_t = tri_crate
+				target_n = nrm_crate
+				target_uv = uv_crate
+				uvs = UV_SCALE_CRATE
+			elif godot_n.y > 0.7:
 				target_t = tri_floor
 				target_n = nrm_floor
 				target_uv = uv_floor
@@ -170,7 +183,7 @@ func _init() -> void:
 				for v in [g0, g2, g1]:  # 反绕匹配 y→-z 镜像
 					target_t.append(v)
 					target_n.append(godot_n)
-					target_uv.append(_planar_uv(v, godot_n, UV_SCALE))
+					target_uv.append(_planar_uv(v, godot_n, uvs))
 					all_tris.append(v)
 					mn = mn.min(v)
 					mx = mx.max(v)
@@ -185,6 +198,8 @@ func _init() -> void:
 	_add_surface(mesh, tri_floor, nrm_floor, uv_floor, "res://resources/materials/mat_floor.tres")
 	_add_surface(mesh, tri_wall, nrm_wall, uv_wall, "res://resources/materials/mat_wall.tres")
 	_add_surface(mesh, tri_ramp, nrm_ramp, uv_ramp, "res://resources/materials/mat_raised.tres")
+	_add_surface(mesh, tri_crate, nrm_crate, uv_crate, "res://resources/materials/mat_crate.tres")
+	print("木箱(func_breakable)三角=%d" % (tri_crate.size() / 3))
 
 	DirAccess.make_dir_recursive_absolute("res://assets/dust2")
 	var mesh_path := "res://assets/dust2/world_geo.mesh"
