@@ -11,6 +11,7 @@ extends SceneTree
 ##
 ## 用法：godot --headless --script res://tools/bsp_extract.gd -- <bsp路径>
 
+const LUMP_ENTITIES := 0
 const LUMP_PLANES := 1
 const LUMP_TEXTURES := 2
 const LUMP_VERTEXES := 3
@@ -19,6 +20,13 @@ const LUMP_FACES := 7
 const LUMP_EDGES := 12
 const LUMP_SURFEDGES := 13
 const LUMP_MODELS := 14
+
+# brush 实体里「非实体/不该当固体墙」的 classname（跳过其模型）。
+# 门类按「开着」处理（留空过道）——更贴合可玩空间。
+const NONSOLID_CLASS := [
+	"trigger", "illusionary", "ladder", "buyzone", "door", "hostage_entity",
+	"weaponbox", "func_tank", "ladder", "rendering", "bomb_target",
+]
 
 var _f: FileAccess
 var _lumps := []  # [offset, length] x15
@@ -58,11 +66,31 @@ func _init() -> void:
 	print("verts=%d edges=%d surfedges=%d planes=%d textures=%d texinfo=%d" %
 			[verts.size(), edges.size(), surfedges.size(), planes.size(), tex_names.size(), texinfo_miptex.size()])
 
-	# 取「所有」面 = world model 0 + 全部 brush 实体（func_wall/箱子/平台/栏杆…）。
-	# 非实体几何（触发器/天空/裁剪）由纹理名过滤掉；动态门按编译位置纳入（灰盒可接受）。
-	var first_face := 0
-	var num_faces: int = _lumps[LUMP_FACES][1] / 20
-	print("全部面（world+brush实体）: numfaces=%d" % num_faces)
+	# 读 brush 实体的 model→origin/classname（仅用于几何摆放与实/虚判断，
+	# 不提取出生点/武器/设计布置）。世界 model0 永远固体、origin=0。
+	var ents := _read_entities()
+	var model_origin := {}   # 模型号 N → 世界偏移
+	var model_skip := {}     # 模型号 N → 跳过（非固体）
+	for ent in ents:
+		var m: String = ent.get("model", "")
+		if not m.begins_with("*"):
+			continue
+		var idx := int(m.substr(1))
+		var org := Vector3.ZERO
+		if ent.has("origin"):
+			var p: PackedStringArray = (ent["origin"] as String).split(" ", false)
+			if p.size() >= 3:
+				org = Vector3(p[0].to_float(), p[1].to_float(), p[2].to_float())
+		model_origin[idx] = org
+		var cn: String = ent.get("classname", "")
+		for bad in NONSOLID_CLASS:
+			if cn.find(bad) != -1:
+				model_skip[idx] = true
+				break
+
+	var models := _read_models()
+	print("brush 模型=%d  其中实体偏移=%d  跳过(门/触发/装饰)=%d" %
+			[models.size(), model_origin.size(), model_skip.size()])
 
 	# 按法线方向分三类灰盒：地面 / 墙 / 斜面
 	var tri_floor := PackedVector3Array()
@@ -77,65 +105,66 @@ func _init() -> void:
 	var skipped := 0
 	var mn := Vector3(1e9, 1e9, 1e9)
 	var mx := -mn
-	for fi in range(first_face, first_face + num_faces):
-		_f.seek(fo + fi * 20)
-		var planenum := _f.get_16()
-		var side := _f.get_16()
-		var firstedge := _read_i32()
-		var numedges := _f.get_16()
-		var texinfo := _f.get_16()
-		# styles[4] + lightofs 跳过（光照不提取）
-
-		# 纹理名过滤（只读名字）
-		var miptex := texinfo_miptex[texinfo] if texinfo < texinfo_miptex.size() else -1
-		var tname := ""
-		if miptex >= 0 and miptex < tex_names.size():
-			tname = tex_names[miptex]
-		if SKIP_TEX.has(tname) or tname.begins_with("sky"):
-			skipped += 1
+	# 逐模型处理，施加各自 origin 偏移（箱子/栏杆/平台归位）
+	for mi in models.size():
+		if model_skip.has(mi):
 			continue
+		var offset: Vector3 = model_origin.get(mi, Vector3.ZERO)
+		var md: Array = models[mi]
+		var first_face: int = md[0]
+		var num_faces: int = md[1]
+		for fi in range(first_face, first_face + num_faces):
+			_f.seek(fo + fi * 20)
+			var planenum := _f.get_16()
+			var side := _f.get_16()
+			var firstedge := _read_i32()
+			var numedges := _f.get_16()
+			var texinfo := _f.get_16()
 
-		# 还原多边形顶点（GoldSrc 坐标）
-		var poly := []
-		for e in range(firstedge, firstedge + numedges):
-			var se: int = surfedges[e]
-			var vidx: int = edges[se][0] if se >= 0 else edges[-se][1]
-			poly.append(verts[vidx])
-		if poly.size() < 3:
-			continue
+			var miptex := texinfo_miptex[texinfo] if texinfo < texinfo_miptex.size() else -1
+			var tname := ""
+			if miptex >= 0 and miptex < tex_names.size():
+				tname = tex_names[miptex]
+			if SKIP_TEX.has(tname) or tname.begins_with("sky"):
+				skipped += 1
+				continue
 
-		# 法线（plane，按 side 翻转）→ 分类
-		var pl: Array = planes[planenum]
-		var gn: Vector3 = pl[0]
-		if side != 0:
-			gn = -gn
-		var godot_n := Vector3(gn.x, gn.z, -gn.y).normalized()
+			var poly := []
+			for e in range(firstedge, firstedge + numedges):
+				var se: int = surfedges[e]
+				var vidx: int = edges[se][0] if se >= 0 else edges[-se][1]
+				poly.append((verts[vidx] as Vector3) + offset)
+			if poly.size() < 3:
+				continue
 
-		var target_t: PackedVector3Array
-		var target_n: PackedVector3Array
-		if godot_n.y > 0.7:
-			target_t = tri_floor
-			target_n = nrm_floor
-		elif absf(godot_n.y) < 0.3:
-			target_t = tri_wall
-			target_n = nrm_wall
-		else:
-			target_t = tri_ramp
-			target_n = nrm_ramp
+			var pl: Array = planes[planenum]
+			var gn: Vector3 = pl[0]
+			if side != 0:
+				gn = -gn
+			var godot_n := Vector3(gn.x, gn.z, -gn.y).normalized()
 
-		# 扇形三角化（GoldSrc→Godot，反绕序以匹配 y→-z 镜像）
-		var g0 := _to_godot(poly[0])
-		for i in range(1, poly.size() - 1):
-			var g1 := _to_godot(poly[i])
-			var g2 := _to_godot(poly[i + 1])
-			# 反绕：0,2,1
-			for v in [g0, g2, g1]:
-				target_t.append(v)
-				target_n.append(godot_n)
-				all_tris.append(v)
-				mn = mn.min(v)
-				mx = mx.max(v)
-			# 碰撞需要正确顺序无所谓（双面），但保持与可视一致
+			var target_t: PackedVector3Array
+			var target_n: PackedVector3Array
+			if godot_n.y > 0.7:
+				target_t = tri_floor
+				target_n = nrm_floor
+			elif absf(godot_n.y) < 0.3:
+				target_t = tri_wall
+				target_n = nrm_wall
+			else:
+				target_t = tri_ramp
+				target_n = nrm_ramp
+
+			var g0 := _to_godot(poly[0])
+			for i in range(1, poly.size() - 1):
+				var g1 := _to_godot(poly[i])
+				var g2 := _to_godot(poly[i + 1])
+				for v in [g0, g2, g1]:  # 反绕匹配 y→-z 镜像
+					target_t.append(v)
+					target_n.append(godot_n)
+					all_tris.append(v)
+					mn = mn.min(v)
+					mx = mx.max(v)
 
 	print("跳过(sky/trigger/clip)面=%d" % skipped)
 	print("三角：地面=%d 墙=%d 斜面=%d  合计 collision tris=%d" %
@@ -167,6 +196,44 @@ func _to_godot(v: Vector3) -> Vector3:
 func _read_i32() -> int:
 	var u := _f.get_32()
 	return u - 0x100000000 if u >= 0x80000000 else u
+
+
+## 解析 entities lump：只取每块的 key/value（我们只用 model/origin/classname）。
+func _read_entities() -> Array:
+	var off: int = _lumps[LUMP_ENTITIES][0]
+	var ln: int = _lumps[LUMP_ENTITIES][1]
+	_f.seek(off)
+	var text := _f.get_buffer(ln).get_string_from_ascii()
+	var out: Array = []
+	var re := RegEx.new()
+	re.compile('"([^"]*)"\\s*"([^"]*)"')
+	for block in text.split("}"):
+		if block.find("{") == -1:
+			continue
+		var d := {}
+		for m in re.search_all(block):
+			d[m.get_string(1)] = m.get_string(2)
+		if not d.is_empty():
+			out.append(d)
+	return out
+
+
+## 读 MODELS lump → 每个模型 [firstface, numfaces, origin]
+func _read_models() -> Array:
+	var out: Array = []
+	var off: int = _lumps[LUMP_MODELS][0]
+	var n: int = _lumps[LUMP_MODELS][1] / 64
+	for i in n:
+		_f.seek(off + i * 64 + 24)  # 跳过 mins[3]+maxs[3]=24 → origin[3]
+		var ox := _f.get_float()
+		var oy := _f.get_float()
+		var oz := _f.get_float()
+		# headnode[4]=16 + visleafs[1]=4 → firstface
+		_f.seek(off + i * 64 + 56)
+		var ff := _read_i32()
+		var nf := _read_i32()
+		out.append([ff, nf, Vector3(ox, oy, oz)])
+	return out
 
 
 func _read_vertices() -> PackedVector3Array:
