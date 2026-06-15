@@ -17,6 +17,8 @@ class_name WeatherSystem
 @export var storm_darken := true
 
 var _rain: GPUParticles3D
+var _splash: GPUParticles3D
+var _collider: GPUParticlesCollisionHeightField3D
 var _flash_light: DirectionalLight3D
 var _flash_rect: ColorRect
 var _thunder: AudioStreamPlayer
@@ -30,11 +32,14 @@ var _orig_ambient := 1.0
 func _ready() -> void:
 	if not enabled:
 		return
+	_build_splash()      # 先建子发射器，雨粒子要引用它
 	_build_rain()
+	_build_collider()
 	_build_flash()
 	_build_audio()
 	if storm_darken:
 		_apply_storm_mood()
+	_apply_wet_ground()
 	_storm_loop()
 
 
@@ -46,42 +51,97 @@ func _process(_delta: float) -> void:
 		_rain.global_position = _player.global_position + Vector3(0, 700, 0)
 
 
-## —— 雨 ——
+## —— 雨（mesh 拉伸雨丝 + 落地碰撞触发飞溅）——
 
 func _build_rain() -> void:
 	_rain = GPUParticles3D.new()
 	_rain.amount = rain_amount
 	_rain.lifetime = 1.0
-	_rain.local_coords = false  # 世界坐标：发射器移动时已落下的雨不跟着平移
+	_rain.local_coords = false
 	_rain.fixed_fps = 0
+	# 雨丝沿落速方向拉伸（运动对齐），比 billboard 更像真雨条
+	_rain.transform_align = GPUParticles3D.TRANSFORM_ALIGN_Y_TO_VELOCITY
 	_rain.visibility_aabb = AABB(Vector3(-rain_radius, -800, -rain_radius), Vector3(rain_radius * 2, 1000, rain_radius * 2))
 
 	var pm := ParticleProcessMaterial.new()
 	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
 	pm.emission_box_extents = Vector3(rain_radius, 20, rain_radius)
-	pm.direction = Vector3(0, -1, 0)
-	pm.spread = 0.0
+	pm.direction = Vector3(0.06, -1, 0.0)  # 轻微斜风
+	pm.spread = 1.0
 	pm.initial_velocity_min = rain_speed
 	pm.initial_velocity_max = rain_speed * 1.15
-	pm.gravity = Vector3(0, -400, 0)
-	# 轻微斜风
-	pm.linear_accel_min = 0.0
-	pm.linear_accel_max = 0.0
+	pm.gravity = Vector3(0, -500, 0)
+	# 落地碰撞：撞到高度场就消失并触发飞溅子发射器
+	pm.collision_mode = ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT
+	pm.sub_emitter_mode = ParticleProcessMaterial.SUB_EMITTER_AT_COLLISION
+	pm.sub_emitter_amount_at_collision = 1
 	_rain.process_material = pm
 
-	# 雨丝：细长竖条，Y 轴朝向相机
 	var quad := QuadMesh.new()
-	quad.size = Vector2(1.3, 16.0)
+	quad.size = Vector2(0.9, 22.0)  # 更细更长的雨条
 	var mat := StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.albedo_color = Color(0.62, 0.7, 0.85, 0.35)
-	mat.billboard_mode = BaseMaterial3D.BILLBOARD_FIXED_Y
-	mat.billboard_keep_scale = true
+	mat.albedo_color = Color(0.66, 0.74, 0.9, 0.45)
 	quad.material = mat
 	_rain.draw_pass_1 = quad
-	add_child(_rain)
+	if _splash:
+		add_child(_rain)
+		_rain.sub_emitter = _rain.get_path_to(_splash)
+	else:
+		add_child(_rain)
 	_rain.emitting = true
+
+
+## 落地飞溅：撞地瞬间溅起的小水花（由雨粒子在碰撞点触发）
+func _build_splash() -> void:
+	_splash = GPUParticles3D.new()
+	_splash.amount = 600
+	_splash.lifetime = 0.45
+	_splash.local_coords = false
+	_splash.emitting = false  # 仅由子发射器触发
+	_splash.one_shot = false
+
+	var pm := ParticleProcessMaterial.new()
+	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_POINT
+	pm.direction = Vector3(0, 1, 0)
+	pm.spread = 55.0
+	pm.flatness = 0.6  # 偏向水平四溅
+	pm.initial_velocity_min = 40.0
+	pm.initial_velocity_max = 90.0
+	pm.gravity = Vector3(0, -600, 0)
+	pm.scale_min = 0.6
+	pm.scale_max = 1.4
+	var curve := Curve.new()
+	curve.add_point(Vector2(0, 1))
+	curve.add_point(Vector2(1, 0))
+	var ct := CurveTexture.new()
+	ct.curve = curve
+	pm.scale_curve = ct
+	_splash.process_material = pm
+
+	var sph := SphereMesh.new()
+	sph.radius = 0.7
+	sph.height = 1.4
+	sph.radial_segments = 5
+	sph.rings = 3
+	var smat := StandardMaterial3D.new()
+	smat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	smat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	smat.albedo_color = Color(0.7, 0.78, 0.92, 0.5)
+	sph.material = smat
+	_splash.draw_pass_1 = sph
+	add_child(_splash)
+
+
+## 雨碰撞用的高度场：自动跟随相机，捕捉下方几何（屋顶也挡雨）
+func _build_collider() -> void:
+	_collider = GPUParticlesCollisionHeightField3D.new()
+	_collider.size = Vector3(3000, 1200, 3000)
+	_collider.resolution = GPUParticlesCollisionHeightField3D.RESOLUTION_1024
+	_collider.update_mode = GPUParticlesCollisionHeightField3D.UPDATE_MODE_WHEN_MOVED
+	_collider.follow_camera_enabled = true
+	add_child(_collider)
 
 
 ## —— 闪电（光 + 全屏闪） ——
@@ -157,14 +217,44 @@ func _apply_storm_mood() -> void:
 
 
 func _find_world_env() -> WorldEnvironment:
-	for n in get_tree().get_nodes_in_group("__none__"):
-		pass
 	var root := get_tree().current_scene
 	if root == null:
 		return null
 	for c in root.get_children():
 		if c is WorldEnvironment:
 			return c
+	return null
+
+
+## 给世界网格的地面 surface 套湿地面 shader（积水反射依赖环境 SSR）
+func _apply_wet_ground() -> void:
+	var mi := _find_world_mesh()
+	if mi == null:
+		return
+	var sh := load("res://shaders/wet_ground.gdshader") as Shader
+	if sh == null:
+		return
+	var sm := ShaderMaterial.new()
+	sm.shader = sh
+	# 用与 mat_floor 相同的沙地贴图作基色
+	var tex := load("res://assets/textures/Ground054/Ground054_1K-JPG_Color.jpg")
+	if tex:
+		sm.set_shader_parameter("albedo_tex", tex)
+	sm.set_shader_parameter("wetness", 1.0)
+	# 地面是 0 号 surface（bsp_extract 先加 floor）
+	if mi.get_surface_override_material_count() > 0:
+		mi.set_surface_override_material(0, sm)
+
+
+## 找 bsp 世界网格（dust2_world.tscn 里的 MeshInstance3D "Mesh"）
+func _find_world_mesh() -> MeshInstance3D:
+	var root := get_tree().current_scene
+	if root == null:
+		return null
+	for c in root.get_children():
+		var m := c.find_child("Mesh", true, false)
+		if m is MeshInstance3D:
+			return m
 	return null
 
 
